@@ -6,16 +6,23 @@ public class Bullet : MonoBehaviour {
 
     public float speed = 20f;
     public Rigidbody2D rb;
+    public GameObject shooter;
+    bool b = false;
 
-	// Use this for initialization
-	void Start () {
+
+
+    // Use this for initialization
+    void Start () {
         rb.velocity = transform.right * speed;
 	}
 
-    void OnTriggerEnter2D (Collider2D hitInfo)
+    void OnCollisionEnter2D(Collision2D hitInfo)
     {
-        Debug.Log(hitInfo.name);
-        //Destroy(gameObject);
+        
+        if (!hitInfo.collider.isTrigger && hitInfo.gameObject!=shooter) {
+            Destroy(gameObject);
+            Debug.Log(hitInfo.gameObject.name);
+        }
     }
 
 }

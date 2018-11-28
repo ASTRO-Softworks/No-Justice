@@ -1,0 +1,43 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Paralaxing : MonoBehaviour {
+    /*
+    public Transform[] backgrounds;
+    private float[] parallaxScales;
+    public float smoothing = 1f;
+
+    private Transform cam;
+    private Vector3 previousCamPos;
+
+    void Awake()
+    {
+        cam = Camera.main.transform;
+    }
+
+
+	// Use this for initialization
+	void Start () {
+        previousCamPos = cam.position;
+
+        parallaxScales = new float[backgrounds.Length];
+
+        //Set parallax scales
+        for( int i=0; i < backgrounds.Length; i++)
+        {
+            parallaxScales[i] = backgrounds[i].position.z * -1;
+        }
+
+        for(int i=0; i < backgrounds.Length; i++)
+        {
+            float parallax = (previousCamPos.x - cam.position.x) * parallaxScales[i];
+        }
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+    */
+}

@@ -6,9 +6,9 @@ public class weapon : MonoBehaviour {
 
     public Transform firePoint;
     public GameObject bulletPrefab;
-
-	// Update is called once per frame
-	void Update () {
+    private GameObject prevBullet;
+    // Update is called once per frame
+    void Update () {
 		if (Input.GetButtonDown("Fire1"))
         {
             Shoot();
@@ -18,6 +18,9 @@ public class weapon : MonoBehaviour {
     void Shoot()
     { 
         // shooting logic
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        
+        prevBullet=Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        prevBullet.GetComponent<Bullet>().shooter=gameObject;
+        //Debug.Log(script.name);
     }
 }
