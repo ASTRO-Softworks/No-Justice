@@ -16,6 +16,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool m_Grounded;            // Whether or not the player is grounded.
     private bool m_wasClimbing;
     private bool m_Climbing;
+    public bool m_Walking;//PRIVATE
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -31,7 +32,7 @@ public class CharacterController2D : MonoBehaviour
 	public class BoolEvent : UnityEvent<bool> { }
 
 	public BoolEvent OnCrouchEvent;
-	private bool m_wasCrouching = false;
+    public bool m_wasCrouching = false;//PRIVATE
     private float m_GravityScale;
 
     private void Awake()
@@ -56,14 +57,16 @@ public class CharacterController2D : MonoBehaviour
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
-			if (colliders[i].gameObject != gameObject && !colliders[i].isTrigger)
+			if (colliders[i].gameObject != gameObject && !colliders[i].isTrigger || (colliders[i].CompareTag("Ladder") && m_Climbing))
 			{
+                //Debug.Log("Here i am!"+ wasGrounded.ToString());
 				m_Grounded = true;
-				if (!wasGrounded)
+                if (!wasGrounded)
 					OnLandEvent.Invoke();
 			}
 		}
-	}
+        //Debug.Log("Grounded: "+m_Grounded.ToString()+"\n"+ "wasGrounded: "+wasGrounded.ToString());
+    }
     /*
     public void Climb(float climb)
     {
@@ -82,23 +85,29 @@ public class CharacterController2D : MonoBehaviour
         m_wasClimbing = true;
     }
     */
-	public void Move(Vector2 tr, bool crouch, bool jump, bool climbing)
+	public void Move(Vector2 tr, bool dirRight, bool crouch, bool jump, bool climbing, bool swimming)
 	{
-        float move = tr.x;
-        float climb = tr.y;
+        if (climbing || jump) crouch = false;
+
+        float hor = tr.x;
+        float ver = tr.y;
+        m_Walking = (hor !=0);
+        m_Climbing = climbing;
 
         if (!m_wasClimbing && climbing)
         {
-            //m_Grounded = false;
-
+            //m_Climbing = true;
+            m_Grounded = true;
             //Remember direction before climbing
             m_wasFacingRight = m_FacingRight;
             
+            /*
             //Turning right
             if (!m_FacingRight)
             {
                 Flip();
             }
+            */
 
             //No gravity while climbing
             m_Rigidbody2D.gravityScale = 0;
@@ -115,13 +124,15 @@ public class CharacterController2D : MonoBehaviour
 
         if (m_wasClimbing && !climbing)
         {
+            //Turning as it was before climbing
+            //m_Climbing = false;
             if (m_wasFacingRight != m_FacingRight)
             {
                 Flip();
             }
 
             //Return gravity to normal value
-            m_Rigidbody2D.gravityScale = 3;
+            m_Rigidbody2D.gravityScale = m_GravityScale;
         }
         //----------------------------------------------------------------------------------------------------------------
 		// If crouching, check to see if the character can stand up
@@ -140,7 +151,7 @@ public class CharacterController2D : MonoBehaviour
         {
 
             // If crouching
-            if (crouch && !climbing)
+            if (crouch && !climbing && !swimming)
             {
                 if (!m_wasCrouching)
                 {
@@ -149,7 +160,7 @@ public class CharacterController2D : MonoBehaviour
                 }
 
                 // Reduce the speed by the crouchSpeed multiplier
-                move *= m_CrouchSpeed;
+                hor *= m_CrouchSpeed;
 
                 // Disable one of the colliders when crouching
                 if (m_CrouchDisableCollider != null)
@@ -171,27 +182,41 @@ public class CharacterController2D : MonoBehaviour
             float targety;                          //Target horisontal velocity
             if (climbing)
             {
-                targety = climb * 10f;              //If climbing fixing horisontal velocity
+                targety = ver * 10f;              //If climbing fixing horisontal velocity
+            }
+            else if (swimming)
+            {
+                targety = ver * 10f;
+                //Debug.Log("Swimming: " + targety.ToString());
             }
             else
             {
                 targety = m_Rigidbody2D.velocity.y; //Keeping current horisontal velocity otherwise
             }
 
-            Vector3 targetVelocity = new Vector2(move * 10f, targety);
+            Vector3 targetVelocity = new Vector2(hor * 10f, targety);
             // And then smoothing it out and applying it to the character
-            m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-
+            //m_Velocity = m_Rigidbody2D.velocity;
+            //if (swimming) m_MovementSmoothing = 0.5f;
+            //m_MovementSmoothing = 0;
+            if (swimming)
+            {
+                //m_Rigidbody2D.AddForce(Vector3.Scale(targetVelocity,new Vector3(5f,1f,0.1f)));
+                m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+            }
+            else {
+                m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+            }
             if (!climbing)
             {
                 // If the input is moving the player right and the player is facing left...
-                if (move > 0 && !m_FacingRight)
+                if (dirRight && !m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
                 }
                 // Otherwise if the input is moving the player left and the player is facing right...
-                else if (move < 0 && m_FacingRight)
+                else if (!dirRight && m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
@@ -199,7 +224,7 @@ public class CharacterController2D : MonoBehaviour
             }
 		}
 		// If the player should jump...
-		if ((m_Grounded || climbing) && jump)
+		if ((m_Grounded || climbing) && !swimming && jump)
 		{
 			// Add a vertical force to the player.
 			m_Grounded = false;

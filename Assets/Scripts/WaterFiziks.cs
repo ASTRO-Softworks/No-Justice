@@ -6,9 +6,9 @@ public class WaterFiziks : MonoBehaviour {
 
     public Rigidbody2D rb;
     public float volume=0;
-    float defaultGravity;
+    float defaultGravity=1;
     float defaultMass;
-
+    
 	// Use this for initialization
 	void Start () {
         defaultGravity = rb.gravityScale;

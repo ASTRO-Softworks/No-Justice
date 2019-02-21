@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class weapon : MonoBehaviour {
+public class Weapon : MonoBehaviour {
 
-    public Transform firePoint;
-    public GameObject bulletPrefab;
-
+    /*
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
-        }
+		
 	}
-
-    void Shoot()
-    { 
-        // shooting logic
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+    */
+    virtual public void Shoot(bool flag)
+    {
+        Debug.Log("PEW PEW!!!");
     }
 }

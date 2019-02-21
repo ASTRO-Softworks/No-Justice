@@ -7,38 +7,51 @@ public class PlayerMovement : MonoBehaviour {
 
     public CharacterController2D controller;
     public Animator animator;
+    public Transform Scope;
 
     public float runSpeed = 40f;
-    public float climbSpeed = 2f;
+    public float climbSpeed = 20f;
+    public float diveSpeed = 100;
 
     float horizontalMove = 0f;
-
     float verticalMove = 0f;
+    float mouseX = 0f;
+    float mousey = 0f;
 
     bool jump = false;
     bool crouch = false;
-    bool Nearladder = false;
-    bool Onladder = false;
-    
+    bool nearladder = false;
+    bool onladder = false;
+    bool swimming = false;
+    bool invisible = false;
+    bool dirRight = false;
+
 
     // Use this for initialization
     void Start () {
-		
-	}
+        //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
+        //new Quaternion()
+        //transform.localRotation
+        Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
+    }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () {//Get controll from keyboard
         horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
 
-        verticalMove = Input.GetAxisRaw("Vertical") * climbSpeed;
+        verticalMove = Input.GetAxisRaw("Vertical");
 
+        mouseX = Input.GetAxisRaw("Mouse X");
+
+        //Scope.gameObject.GetComponent<Scope>().takeAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
         animator.SetFloat("Speed",Mathf.Abs(horizontalMove));
 
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
-            Onladder = false;
-            Debug.Log("NOT ON LADDER!!!");
+            onladder = false;
+            //Debug.Log("NOT ON LADDER!!!");
             animator.SetBool("IsJumping", true);
         }
 
@@ -52,15 +65,51 @@ public class PlayerMovement : MonoBehaviour {
             crouch = false;
             //animator.SetBool("IsCrouching", false);
         }
-        else if (Input.GetButtonDown("Interact"))
+        else if (Input.GetButtonDown("Interact0"))//Box hide
         {
-            if (Nearladder)
+            Collider2D[] col = Physics2D.OverlapCircleAll(transform.position, 1f);
+            foreach(Collider2D i in col)
             {
-                Onladder = true;
+                if (i.CompareTag("Hide"))
+                {
+                    i.gameObject.GetComponent<Hide>().Use(gameObject, true); ;
+                    //i.Use(gameObject.transform, true);
+                    //Debug.Log(i.name);
+                }
+            }
+        }
+        else if (Input.GetButtonDown("Interact1"))//"Invis"
+        {
+            invisible = !invisible;
+            if (invisible)
+            {
+                GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, .5f);
+            } else
+            {
+                GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+            }
+            
+        }
+        else if (Input.GetButtonDown("Fire1"))//"Feiaaaar"
+        {
+            Scope.gameObject.GetComponent<Scope>().Shoot(true);
+        }
+        else if (verticalMove>0)
+        {
+            if (nearladder)
+            {
+                onladder = true;
             }
             //animator.SetBool("IsCrouching", false);
         }
 
+        if (onladder) verticalMove *= climbSpeed;
+        else if (swimming) {
+            //Debug.Log("Diving Down! " + verticalMove.ToString());
+            verticalMove = verticalMove *diveSpeed;
+            //Debug.Log("Diving Down! "+verticalMove.ToString()+" "+diveSpeed.ToString());
+        }
+        //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
 
     }
 
@@ -68,9 +117,13 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (collider.CompareTag("Ladder"))
         {
-            Nearladder = true;
+            nearladder = true;
 
-            Debug.Log("Ladder");
+            //Debug.Log("Ladder");
+        }
+        else if (collider.CompareTag("Water"))
+        {
+            swimming = true;
         }
 
     }
@@ -79,10 +132,14 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (collider.CompareTag("Ladder"))
         {
-            Nearladder = false;
+            nearladder = false;
             //Onladder = false;
-            Debug.Log("NotLadder");
+            //Debug.Log("NotLadder");
             
+        }
+        else if (collider.CompareTag("Water"))
+        {
+            swimming = false;
         }
 
     }
@@ -90,8 +147,8 @@ public class PlayerMovement : MonoBehaviour {
     public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
-        Onladder = false;
-        Debug.Log("NOT ON LADDER 'COS LANDED!!!");
+        onladder = false;
+        //Debug.Log("NOT ON LADDER 'COS LANDED!!!");
     }
 
     public void OnCrouching(bool isCrouching)
@@ -101,8 +158,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        Debug.Log("NearLadder " + Nearladder.ToString() + "\nOnladder " + Onladder.ToString());
-        controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, crouch, jump, Nearladder&&Onladder); 
+        dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
+        //Debug.Log(dirRight);
+        //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
+        controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming); 
         jump = false;
     }
 }
