@@ -8,6 +8,7 @@ public class Hide : MonoBehaviour
     public GameObject m_obj;
     public bool isUsed=false;
     public Rigidbody2D rb;
+    public List<GameObject> list;
 
     private float pTime = 0;
     private float pPos = 0;

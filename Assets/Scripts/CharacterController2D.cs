@@ -57,11 +57,11 @@ public class CharacterController2D : MonoBehaviour
 		Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
 		for (int i = 0; i < colliders.Length; i++)
 		{
-			if (colliders[i].gameObject != gameObject && !colliders[i].isTrigger)
+			if (colliders[i].gameObject != gameObject && !colliders[i].isTrigger || (colliders[i].CompareTag("Ladder") && m_Climbing))
 			{
+                //Debug.Log("Here i am!"+ wasGrounded.ToString());
 				m_Grounded = true;
                 if (!wasGrounded)
-                    
 					OnLandEvent.Invoke();
 			}
 		}
@@ -85,26 +85,29 @@ public class CharacterController2D : MonoBehaviour
         m_wasClimbing = true;
     }
     */
-	public void Move(Vector2 tr, bool crouch, bool jump, bool climbing, bool swimming)
+	public void Move(Vector2 tr, bool dirRight, bool crouch, bool jump, bool climbing, bool swimming)
 	{
         if (climbing || jump) crouch = false;
 
         float hor = tr.x;
         float ver = tr.y;
         m_Walking = (hor !=0);
+        m_Climbing = climbing;
 
         if (!m_wasClimbing && climbing)
         {
-            //m_Grounded = false;
-
+            //m_Climbing = true;
+            m_Grounded = true;
             //Remember direction before climbing
             m_wasFacingRight = m_FacingRight;
             
+            /*
             //Turning right
             if (!m_FacingRight)
             {
                 Flip();
             }
+            */
 
             //No gravity while climbing
             m_Rigidbody2D.gravityScale = 0;
@@ -122,13 +125,14 @@ public class CharacterController2D : MonoBehaviour
         if (m_wasClimbing && !climbing)
         {
             //Turning as it was before climbing
+            //m_Climbing = false;
             if (m_wasFacingRight != m_FacingRight)
             {
                 Flip();
             }
 
             //Return gravity to normal value
-            m_Rigidbody2D.gravityScale = 3;
+            m_Rigidbody2D.gravityScale = m_GravityScale;
         }
         //----------------------------------------------------------------------------------------------------------------
 		// If crouching, check to see if the character can stand up
@@ -206,13 +210,13 @@ public class CharacterController2D : MonoBehaviour
             if (!climbing)
             {
                 // If the input is moving the player right and the player is facing left...
-                if (hor > 0 && !m_FacingRight)
+                if (dirRight && !m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
                 }
                 // Otherwise if the input is moving the player left and the player is facing right...
-                else if (hor < 0 && m_FacingRight)
+                else if (!dirRight && m_FacingRight)
                 {
                     // ... flip the player.
                     Flip();
