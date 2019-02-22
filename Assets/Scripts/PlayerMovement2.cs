@@ -54,7 +54,7 @@ public class PlayerMovement2 : MonoBehaviour {
             //Debug.Log("NOT ON LADDER!!!");
             animator.SetBool("IsJumping", true);
         }
-
+        /*
         if (Input.GetButtonDown("Crouch2"))
         {
             crouch = true;
@@ -102,7 +102,7 @@ public class PlayerMovement2 : MonoBehaviour {
             }
             //animator.SetBool("IsCrouching", false);
         }
-
+        */
         if (onladder) verticalMove *= climbSpeed;
         else if (swimming) {
             //Debug.Log("Diving Down! " + verticalMove.ToString());
