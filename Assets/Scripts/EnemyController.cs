@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemyController : MonoBehaviour {
-
+    
     public CharacterController2D controller;
     public Animator animator;
     public Transform Scope;
@@ -73,18 +74,26 @@ public class EnemyController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+        //Что блин такое Aimer?!
+        //Да и Scope тоже?
         Scope = transform.Find("Aimer");
+        //A transform вообще законно без объекта использовать?
         resp = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 100);
-        for(int i = 0; i < cld.Length; i++)
+        //Массив всех объектов в радиусе от врага = 2 
+        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 2);
+        //Перебираем эти объекты
+        for (int i = 0; i < cld.Length; i++)
         {
+            //если среди них есть "Player" то...
             if (cld[i].gameObject.CompareTag("Player"))
             {
+                //выбираем его целью? передаем его координаты вектором?
                 Scope.gameObject.GetComponent<Scope>().takeAim(cld[i].transform.position);
+                Debug.Log(cld[i].transform.position);
             }
         }
 	}
@@ -94,7 +103,8 @@ public class EnemyController : MonoBehaviour {
         dirRight = (Scope.position.x - transform.localPosition.x > 0);
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
-        controller.Move(Vector2.zero, dirRight, crouch, jump, nearladder && onladder, swimming);
+        //оно ходит
+        controller.Move(new Vector2( (float)Math.Sin(Time.time)/3, 0), dirRight, crouch, jump, nearladder && onladder, swimming);
         jump = false;
     }
 }
