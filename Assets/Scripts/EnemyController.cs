@@ -26,6 +26,8 @@ public class EnemyController : MonoBehaviour {
     bool swimming = false;
     bool invisible = false;
     bool dirRight = false;
+    //зона внимания врага
+    public float farSight = 2;
 
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -83,9 +85,22 @@ public class EnemyController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //Массив всех объектов в радиусе от врага = 2 
-        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 2);
+        //Массив всех объектов в радиусе видимости от врага
+        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, farSight);
         //Перебираем эти объекты
+        /*я думаю лучше так
+        foreach(Collider2D cldi in cld)
+        {
+            //если среди них есть "Player" то...
+
+            if (cldi.gameObject.CompareTag("Player"))
+            {
+                //выбираем его целью? передаем его координаты вектором?
+                Scope.gameObject.GetComponent<Scope>().takeAim(cldi.transform.position);
+                Debug.Log(cldi.transform.position);
+
+            }
+        }*/
         for (int i = 0; i < cld.Length; i++)
         {
             //если среди них есть "Player" то...
@@ -104,7 +119,8 @@ public class EnemyController : MonoBehaviour {
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         //оно ходит
-        controller.Move(new Vector2( (float)Math.Sin(Time.time)/3, 0), dirRight, crouch, jump, nearladder && onladder, swimming);
+        controller.Move(new Vector2( (float)Math.Sin(Time.time)/3, 0), dirRight, crouch, Math.Abs(Math.Sin(Time.time)) < 0.1, nearladder && onladder, swimming);
+        
         jump = false;
     }
 }
