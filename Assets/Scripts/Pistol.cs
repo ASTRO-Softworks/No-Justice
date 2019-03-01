@@ -31,7 +31,7 @@ public class Pistol : Weapon {
         // shooting logic
         
         Transform tr = transform; 
-        Instantiate(pew, tr);
+        
         float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
 
         Vector3 pos = gameObject.transform.position;
@@ -52,6 +52,7 @@ public class Pistol : Weapon {
         */
 
         prevBullet=Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Instantiate(pew, firePoint.position, firePoint.rotation);
         //prevBullet.GetComponent<Bullet>().shooter=gameObject;
         Vector3 speed = dir.normalized;
         prevBullet.gameObject.GetComponent<Rigidbody2D>().velocity = speed*2;

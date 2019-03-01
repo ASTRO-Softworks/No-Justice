@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour {
             //Debug.Log("NOT ON LADDER!!!");
             animator.SetBool("IsJumping", true);
         }
-        /*
+
         if (Input.GetButtonDown("Crouch"))
         {
             crouch = true;
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             //animator.SetBool("IsCrouching", false);
         }
-        */
+
         if (onladder) verticalMove *= climbSpeed;
         else if (swimming) {
             //Debug.Log("Diving Down! " + verticalMove.ToString());
@@ -158,7 +158,7 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
+        dirRight = ((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);//horizontalMove > 0?true:horizontalMove<0?false:dirRight;//
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming); 

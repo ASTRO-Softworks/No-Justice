@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour {
     public GameObject shooter;
     //bool b = false;
 
-
+    
 
     // Use this for initialization
     void Start () {

@@ -209,6 +209,17 @@ public class CharacterController2D : MonoBehaviour
             }
             if (!climbing)
             {
+                //моя версия лучше
+                // - Сергеев Сергей
+                if (tr.x != 0)
+                {
+                    if ((tr.x>0) ^ m_FacingRight)
+                    {
+                        // ... flip the player.
+                        Flip();
+                    }
+                }
+                /*
                 // If the input is moving the player right and the player is facing left...
                 if (dirRight && !m_FacingRight)
                 {
@@ -220,7 +231,7 @@ public class CharacterController2D : MonoBehaviour
                 {
                     // ... flip the player.
                     Flip();
-                }
+                }*/
             }
 		}
 		// If the player should jump...

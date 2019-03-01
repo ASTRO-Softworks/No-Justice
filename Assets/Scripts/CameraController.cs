@@ -7,8 +7,9 @@ public class CameraController : MonoBehaviour {
     public GameObject Anchor;
 
     // Use this for initialization
-    void Start () {
-		
+    void Start ()
+    {
+
 	}
 	
 	// Update is called once per frame
