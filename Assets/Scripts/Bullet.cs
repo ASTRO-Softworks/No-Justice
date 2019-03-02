@@ -35,4 +35,14 @@ public class Bullet : MonoBehaviour {
         }
     }
 
+    void OnTriggerExit2D(Collider2D colider)
+    {
+        if (colider.CompareTag("MainCamera"))
+        {
+            Destroy(gameObject);
+            //~Bullet();
+        }
+
+    }
+
 }
