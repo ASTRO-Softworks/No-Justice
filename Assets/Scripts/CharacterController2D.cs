@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
@@ -98,25 +98,26 @@ public class CharacterController2D : MonoBehaviour
     }
     public void Climb()
     {
-        if (m_CrouchDisableCollider.
-            .gameObject.CompareTag("Ladder")
+        â€¨        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 0);
+        if (cld[0].CompareTag("Ladder")
+            //.gameObject.CompareTag("Ladder")
             //m_CrouchDisableCollider.CompareTag("Ladder")
             )
         Debug.Log("Climb");
     }
 	public void Move(Vector2 tr)
     {
-        //ìîÿ âåðñèÿ ëó÷øå
-        // - Ñåðãååâ Ñåðãåé
+        //Ð¼Ð¾Ñ Ð²ÐµÑ€ÑÐ¸Ñ Ð»ÑƒÑ‡ÑˆÐµ
+        // - Ð¡ÐµÑ€Ð³ÐµÐµÐ² Ð¡ÐµÑ€Ð³ÐµÐ¹
      
-        //Ãîðèçîíòàëüíàÿ ñîñòàâëÿþùàÿ âåêòîðà äâèæåíèÿ
+        //Ð“Ð¾Ñ€Ð¸Ð·Ð¾Ð½Ñ‚Ð°Ð»ÑŒÐ½Ð°Ñ ÑÐ¾ÑÑ‚Ð°Ð²Ð»ÑÑŽÑ‰Ð°Ñ Ð²ÐµÐºÑ‚Ð¾Ñ€Ð° Ð´Ð²Ð¸Ð¶ÐµÐ½Ð¸Ñ
         float hor = tr.x;
         m_Walking = (hor !=0);
         // finding the target velocity
         Vector3 targetVelocity = new Vector2(hor * 10f, m_Rigidbody2D.velocity.y);//Keeping current horisontal velocity otherwise   
         // Move the character 
         m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-        //Åñëè èãðîê èäåò íå â ñòîðîíó êóäà ñìîòðèò ...
+        //Ð•ÑÐ»Ð¸ Ð¸Ð³Ñ€Ð¾Ðº Ð¸Ð´ÐµÑ‚ Ð½Ðµ Ð² ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñƒ ÐºÑƒÐ´Ð° ÑÐ¼Ð¾Ñ‚Ñ€Ð¸Ñ‚ ...
         if ((hor > 0) ^ m_FacingRight)
         {
             // ... flip the player.
@@ -233,8 +234,8 @@ public class CharacterController2D : MonoBehaviour
             /*}
             if (!climbing)
             {*/
-                //ìîÿ âåðñèÿ ëó÷øå
-                // - Ñåðãååâ Ñåðãåé
+                //Ð¼Ð¾Ñ Ð²ÐµÑ€ÑÐ¸Ñ Ð»ÑƒÑ‡ÑˆÐµ
+                // - Ð¡ÐµÑ€Ð³ÐµÐµÐ² Ð¡ÐµÑ€Ð³ÐµÐ¹
                 if ((tr.x > 0) ^ m_FacingRight)
                 {
                     // ... flip the player.
