@@ -49,7 +49,8 @@ public class PlayerMovement : MonoBehaviour {
 
         if (Input.GetButtonDown("Jump"))
         {
-            jump = true;
+            //jump = true;
+            controller.Jump();
             onladder = false;
             //Debug.Log("NOT ON LADDER!!!");
             animator.SetBool("IsJumping", true);
@@ -162,6 +163,6 @@ public class PlayerMovement : MonoBehaviour {
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming); 
-        jump = false;
+        //jump = false;
     }
 }

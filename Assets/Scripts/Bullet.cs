@@ -9,7 +9,7 @@ public class Bullet : MonoBehaviour {
     public GameObject shooter;
     //bool b = false;
 
-    
+
 
     // Use this for initialization
     void Start () {
@@ -29,10 +29,20 @@ public class Bullet : MonoBehaviour {
                 hitInfo.gameObject.GetComponent<Stats>().Damage(26);
             }
             //hitInfo.gameObject.GetComponent<Stats>().Damage(26);
-            Debug.Log(hitInfo.gameObject.name);
+    //        Debug.Log(hitInfo.gameObject.name);
 
             //gameObject.transform.parent.loca
         }
+    }
+
+    void OnTriggerExit2D(Collider2D colider)
+    {
+        if (colider.CompareTag("MainCamera"))
+        {
+            Destroy(gameObject);
+            //~Bullet();
+        }
+
     }
 
 }

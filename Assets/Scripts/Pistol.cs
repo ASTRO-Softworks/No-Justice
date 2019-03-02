@@ -39,7 +39,6 @@ public class Pistol : Weapon {
         /*
         RaycastHit2D hit = Physics2D.Raycast(pos, dir, 10000, whatToHit);
         Debug.DrawLine(pos, dir * 100, Color.cyan);
-
         if (hit.collider != null)
         {
             Debug.DrawLine(pos, hit.point, Color.red);

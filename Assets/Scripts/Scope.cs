@@ -112,25 +112,5 @@ public class Scope : MonoBehaviour
                 weapon.GetComponents<Weapon>()[0].Shoot(flag);
             }
         }
-
-
-        /*
-        Vector2 mousePosition = new Vector2(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y);
-        Vector2 firePointPosition = new Vector2 (firePoint.position.x, firePoint.position.y);
-        RaycastHit2D hit = Physics2D.Raycast (firePointPosition, mousePosition-firePointPosition, 10000, whatToHit);
-        Debug.DrawLine (firePointPosition, (mousePosition-firePointPosition)*100, Color.cyan);
-        if (hit.collider != null) {
-            Debug.DrawLine (firePointPosition, hit.point, Color.red);
-            Debug.Log ("We hit " + hit.collider.name + " and did " + Damage + " damage.");
-        }
-        float rotZ = Mathf.Atan2(transform.localPosition.y, transform.localPosition.x) * Mathf.Rad2Deg;
-        Quaternion rotationZ = Quaternion.Euler (0f, 0f, rotZ - 90);
-        //Instantiate(bulletPrefab, transform.localPosition, rotationZ);
-        Vector2 normSpeed = transform.localPosition;
-        normSpeed.Normalize ();
-        bullet = Instantiate(bulletPrefab, transform.parent.localPosition + transform.localPosition, rotationZ);
-        bullet.GetComponent<Bullet>().shooter = gameObject;
-        bullet.GetComponent<Rigidbody2D>().velocity = transform.localPosition * bulletSpeed;
-        */
     }
 }

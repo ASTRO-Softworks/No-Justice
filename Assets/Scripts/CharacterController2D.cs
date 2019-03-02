@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-	[SerializeField] private float m_JumpForce = 400f;							// Amount of force added when the player jumps.
+	[SerializeField] public float m_JumpForce = 400f;							// Amount of force added when the player jumps.
 	[Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;			// Amount of maxSpeed applied to crouching movement. 1 = 100%
 	[Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;	// How much to smooth out the movement
 	[SerializeField] private bool m_AirControl = false;							// Whether or not a player can steer while jumping;
@@ -16,7 +16,7 @@ public class CharacterController2D : MonoBehaviour
 	private bool m_Grounded;            // Whether or not the player is grounded.
     private bool m_wasClimbing;
     private bool m_Climbing;
-    public bool m_Walking;//PRIVATE
+    private bool m_Walking;//PRIVATE
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
 	private Rigidbody2D m_Rigidbody2D;
 	private bool m_FacingRight = true;  // For determining which way the player is currently facing.
@@ -46,7 +46,6 @@ public class CharacterController2D : MonoBehaviour
 		if (OnCrouchEvent == null)
 			OnCrouchEvent = new BoolEvent();
 	}
-
 	private void FixedUpdate()
 	{
 		bool wasGrounded = m_Grounded;
@@ -85,15 +84,54 @@ public class CharacterController2D : MonoBehaviour
         m_wasClimbing = true;
     }
     */
+    public void Jump()
+    {
+        if (m_Grounded)
+        {
+            m_Grounded = false;
+		    m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+        }
+    }
+    public void Crouch()
+    {
+
+    }
+    public void Climb()
+    {
+        if (m_CrouchDisableCollider.
+            .gameObject.CompareTag("Ladder")
+            //m_CrouchDisableCollider.CompareTag("Ladder")
+            )
+        Debug.Log("Climb");
+    }
+	public void Move(Vector2 tr)
+    {
+        //моя версия лучше
+        // - Сергеев Сергей
+     
+        //Горизонтальная составляющая вектора движения
+        float hor = tr.x;
+        m_Walking = (hor !=0);
+        // finding the target velocity
+        Vector3 targetVelocity = new Vector2(hor * 10f, m_Rigidbody2D.velocity.y);//Keeping current horisontal velocity otherwise   
+        // Move the character 
+        m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
+        //Если игрок идет не в сторону куда смотрит ...
+        if ((hor > 0) ^ m_FacingRight)
+        {
+            // ... flip the player.
+            Flip();
+        }
+    }
 	public void Move(Vector2 tr, bool dirRight, bool crouch, bool jump, bool climbing, bool swimming)
 	{
-        if (climbing || jump) crouch = false;
+        //if (climbing || jump) crouch = false;
 
         float hor = tr.x;
-        float ver = tr.y;
+      //  float ver = tr.y;
         m_Walking = (hor !=0);
-        m_Climbing = climbing;
-
+        //m_Climbing = climbing;
+        /*
         if (!m_wasClimbing && climbing)
         {
             //m_Climbing = true;
@@ -101,27 +139,13 @@ public class CharacterController2D : MonoBehaviour
             //Remember direction before climbing
             m_wasFacingRight = m_FacingRight;
             
-            /*
-            //Turning right
-            if (!m_FacingRight)
-            {
-                Flip();
-            }
-            */
-
+          
             //No gravity while climbing
             m_Rigidbody2D.gravityScale = 0;
         }
+        */
 
-        // Move the character by finding the target velocity
-        //m_Rigidbody2D.velocity.x
-
-        //Vector3 targetVelocity = new Vector2(0, climb * 10f);
-
-        // And then smoothing it out and applying it to the character
-
-       // m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-
+        /*
         if (m_wasClimbing && !climbing)
         {
             //Turning as it was before climbing
@@ -133,10 +157,10 @@ public class CharacterController2D : MonoBehaviour
 
             //Return gravity to normal value
             m_Rigidbody2D.gravityScale = m_GravityScale;
-        }
+        }*/
         //----------------------------------------------------------------------------------------------------------------
 		// If crouching, check to see if the character can stand up
-		if (!crouch)
+		/*if (!crouch)
 		{
             // If the character has a ceiling preventing them from standing up, keep them crouching
             Collider2D Col = Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround);
@@ -144,10 +168,10 @@ public class CharacterController2D : MonoBehaviour
 			{
 				crouch = true;
 			}
-		}
+		}*/
 
         //only control the player if grounded or airControl is turned on
-        if (m_Grounded || m_AirControl || climbing)
+        /*if (m_Grounded || m_AirControl || climbing)
         {
 
             // If crouching
@@ -177,7 +201,7 @@ public class CharacterController2D : MonoBehaviour
                     OnCrouchEvent.Invoke(false);
                 }
             }
-
+            
             // Move the character by finding the target velocity
             float targety;                          //Target horisontal velocity
             if (climbing)
@@ -190,11 +214,11 @@ public class CharacterController2D : MonoBehaviour
                 //Debug.Log("Swimming: " + targety.ToString());
             }
             else
-            {
-                targety = m_Rigidbody2D.velocity.y; //Keeping current horisontal velocity otherwise
-            }
-
-            Vector3 targetVelocity = new Vector2(hor * 10f, targety);
+            {*/
+            // Move the character by finding the target velocity
+            float targety = m_Rigidbody2D.velocity.y; //Keeping current horisontal velocity otherwise
+            
+            Vector3 targetVelocity = new Vector2(hor * 10f, targety);/*
             // And then smoothing it out and applying it to the character
             //m_Velocity = m_Rigidbody2D.velocity;
             //if (swimming) m_MovementSmoothing = 0.5f;
@@ -204,21 +228,19 @@ public class CharacterController2D : MonoBehaviour
                 //m_Rigidbody2D.AddForce(Vector3.Scale(targetVelocity,new Vector3(5f,1f,0.1f)));
                 m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
             }
-            else {
+            else {*/
                 m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
-            }
+            /*}
             if (!climbing)
-            {
+            {*/
                 //моя версия лучше
                 // - Сергеев Сергей
-                if (tr.x != 0)
+                if ((tr.x > 0) ^ m_FacingRight)
                 {
-                    if ((tr.x>0) ^ m_FacingRight)
-                    {
-                        // ... flip the player.
-                        Flip();
-                    }
+                    // ... flip the player.
+                    Flip();
                 }
+                
                 /*
                 // If the input is moving the player right and the player is facing left...
                 if (dirRight && !m_FacingRight)
@@ -232,18 +254,18 @@ public class CharacterController2D : MonoBehaviour
                     // ... flip the player.
                     Flip();
                 }*/
-            }
+            /*}*/
 		}
 		// If the player should jump...
-		if ((m_Grounded || climbing) && !swimming && jump)
+		/*if ((m_Grounded || climbing) && !swimming && jump)
 		{
 			// Add a vertical force to the player.
 			m_Grounded = false;
 			m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
 		}
 
-        m_wasClimbing = climbing;
-	}
+        m_wasClimbing = climbing;*/
+	
 
 
 	private void Flip()
@@ -260,4 +282,5 @@ public class CharacterController2D : MonoBehaviour
 		transform.localScale = theScale;
         */
 	}
+
 }

@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Pew : MonoBehaviour {
     bool b = false;
+    float timeTolive = 2;
+    float createdTime;
+
 	// Use this for initialization
 	void Start () {
-		
-	}
+        createdTime = Time.time;
+
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        if (!b) b = true;
-        else Destroy(gameObject);
+        if (Time.time - createdTime > timeTolive)
+            Destroy(gameObject);
 	}
 }

@@ -40,7 +40,7 @@ public class Hide : MonoBehaviour
         if (isUsed)
         {
             Vector3 offset = new Vector3(0f, -0.25f, 0f);
-            if (m_obj.GetComponent<CharacterController2D>().m_Walking)
+/*            if (m_obj.GetComponent<CharacterController2D>().m_Walking)
             {
                 if (m_obj.GetComponent<CharacterController2D>().m_wasCrouching)
                 {
@@ -51,7 +51,7 @@ public class Hide : MonoBehaviour
                     offset += new Vector3(0f, walkingOffset, 0f);
                 }
             }
-
+            */
             transform.localPosition = m_obj.transform.localPosition;
             //vel = (1 - dal) * vel + dal * Vector3.Magnitude(m_obj.GetComponent<Rigidbody2D>().velocity);
             //vel = (1 - dal) * vel + dal * m_obj.GetComponent<Rigidbody2D>().velocity.x;
