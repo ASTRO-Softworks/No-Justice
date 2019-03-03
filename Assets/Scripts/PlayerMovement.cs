@@ -8,11 +8,11 @@ public class PlayerMovement : MonoBehaviour {
     public CharacterController2D controller;
     public Animator animator;
     public Transform Scope;
-
+    /*
     public float runSpeed = 40f;
     public float climbSpeed = 20f;
     public float diveSpeed = 100;
-
+    */
     float horizontalMove = 0f;
     float verticalMove = 0f;
     float mouseX = 0f;
@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour {
     bool nearladder = false;
     bool onladder = false;
     bool swimming = false;
+    bool flying = false;
     bool invisible = false;
     bool dirRight = false;
 
@@ -32,12 +33,13 @@ public class PlayerMovement : MonoBehaviour {
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
         //new Quaternion()
         //transform.localRotation
+        controller.Toggle_Walk();
         Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
     }
 	
 	// Update is called once per frame
 	void Update () {//Get controll from keyboard
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
         verticalMove = Input.GetAxisRaw("Vertical");
 
@@ -52,18 +54,25 @@ public class PlayerMovement : MonoBehaviour {
             jump = true;
             onladder = false;
             //Debug.Log("NOT ON LADDER!!!");
+            controller.Jump();
             animator.SetBool("IsJumping", true);
         }
 
         if (Input.GetButtonDown("Crouch"))
         {
             crouch = true;
-            //animator.SetBool("IsCrouching", true);
+            if (crouch) controller.Toggle_Crouch();
+            else controller.Toggle_Walk();
+            animator.SetBool("IsCrouching", true);
         }
         else if (Input.GetButtonUp("Crouch"))
         {
+
             crouch = false;
-            //animator.SetBool("IsCrouching", false);
+            if (crouch) controller.Toggle_Crouch();
+            else controller.Toggle_Walk();
+
+            animator.SetBool("IsCrouching", false);
         }
         else if (Input.GetButtonDown("Interact0"))//Box hide
         {
@@ -90,6 +99,14 @@ public class PlayerMovement : MonoBehaviour {
             }
             
         }
+        else if (Input.GetButtonDown("Interact2"))//"Fly"
+        {
+
+            flying = !flying;
+            if (flying) controller.Toggle_Fly();
+            else controller.Toggle_Walk();
+
+        }
         else if (Input.GetButtonDown("Fire1"))//"Feiaaaar"
         {
             Scope.gameObject.GetComponent<Scope>().Shoot(true);
@@ -102,7 +119,7 @@ public class PlayerMovement : MonoBehaviour {
             }
             //animator.SetBool("IsCrouching", false);
         }
-
+        /*
         if (onladder) verticalMove *= climbSpeed;
         else if (swimming) {
             //Debug.Log("Diving Down! " + verticalMove.ToString());
@@ -110,7 +127,7 @@ public class PlayerMovement : MonoBehaviour {
             //Debug.Log("Diving Down! "+verticalMove.ToString()+" "+diveSpeed.ToString());
         }
         //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
-
+        */
     }
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -158,10 +175,10 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        dirRight = ((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);//horizontalMove > 0?true:horizontalMove<0?false:dirRight;//
+        //dirRight = ((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);//horizontalMove > 0?true:horizontalMove<0?false:dirRight;//
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
-        controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming); 
+        controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, Camera.main.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position); 
         jump = false;
     }
 }

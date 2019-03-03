@@ -94,7 +94,7 @@ public class EnemyController : MonoBehaviour {
         dirRight = (Scope.position.x - transform.localPosition.x > 0);
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
-        controller.Move(Vector2.zero, dirRight, crouch, jump, nearladder && onladder, swimming);
+        //controller.Move(Vector2.zero, dirRight, crouch, jump, nearladder && onladder, swimming);
         jump = false;
     }
 }
