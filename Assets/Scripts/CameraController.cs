@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        FOWManage.transform.localScale = new Vector3(Camera.main.orthographicSize * cFOWmul, Camera.main.orthographicSize * cFOWmul / 2);
+        //FOWManage.transform.localScale = new Vector3(Camera.main.orthographicSize * cFOWmul, Camera.main.orthographicSize * cFOWmul/2);
         //FOW.bounds.size.x = Camera.main.orthographicSize * 5.0;
         //gameObject.GetComponent<Camera>().orthographicSize
         //
