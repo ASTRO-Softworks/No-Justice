@@ -33,13 +33,13 @@ public class PlayerMovement : MonoBehaviour {
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
         //new Quaternion()
         //transform.localRotation
-        controller.Toggle_Walk();
+        //controller.Toggle_Walk();
         Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
     }
 	
 	// Update is called once per frame
 	void Update () {//Get controll from keyboard
-        horizontalMove = Input.GetAxisRaw("Horizontal");
+        horizontalMove = Input.GetAxisRaw("Horizontal") * 2;
 
         verticalMove = Input.GetAxisRaw("Vertical");
 
@@ -116,6 +116,7 @@ public class PlayerMovement : MonoBehaviour {
             if (nearladder)
             {
                 onladder = true;
+                controller.Toggle_Climb();
             }
             //animator.SetBool("IsCrouching", false);
         }
@@ -141,6 +142,7 @@ public class PlayerMovement : MonoBehaviour {
         else if (collider.CompareTag("Water"))
         {
             swimming = true;
+            controller.Toggle_Swim();
         }
 
     }
@@ -150,6 +152,7 @@ public class PlayerMovement : MonoBehaviour {
         if (collider.CompareTag("Ladder"))
         {
             nearladder = false;
+            if (onladder) controller.Toggle_Walk();
             //Onladder = false;
             //Debug.Log("NotLadder");
             
@@ -157,13 +160,14 @@ public class PlayerMovement : MonoBehaviour {
         else if (collider.CompareTag("Water"))
         {
             swimming = false;
+            controller.Toggle_Walk();
         }
-
     }
 
     public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
+        if (onladder) controller.Toggle_Walk();
         onladder = false;
         //Debug.Log("NOT ON LADDER 'COS LANDED!!!");
     }

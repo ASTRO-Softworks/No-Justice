@@ -230,9 +230,6 @@ MonoBehaviour:
   controller: {fileID: 114374126403139568}
   animator: {fileID: 95291008276263826}
   Scope: {fileID: 0}
-  runSpeed: 40
-  climbSpeed: 20
-  diveSpeed: 50
 --- !u!114 &114189025846302946
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -263,6 +260,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JumpForce: 800
+  m_FlyingSpeed: 800
+  m_WalkingSpeed: 10
+  m_ClimbingSpeed: 6
+  m_GravityScale: 1
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
   m_AirControl: 1
@@ -272,6 +273,7 @@ MonoBehaviour:
   m_GroundCheck: {fileID: 4074607533882002}
   m_CeilingCheck: {fileID: 4238135724600352}
   m_CrouchDisableCollider: {fileID: 61720412190732408}
+  m_Rigidbody2D: {fileID: 50238389859280360}
   m_Walking: 0
   OnLandEvent:
     m_PersistentCalls:
@@ -392,7 +394,7 @@ SpriteRenderer:
   m_Size: {x: 0.25, y: 0.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212527318176897632

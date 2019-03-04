@@ -7,6 +7,9 @@ public class CameraController : MonoBehaviour {
     public GameObject Anchor;//Object? to which camera attached
     const float cFOWmul = 5.0f;
     public GameObject FOWManage;
+    public float Smoothing = 0.5f;
+    public float VelMul = 0.1f;
+    private Vector3 ref_Velocity = Vector2.zero;
     // Use this for initialization
     void Start () {
         //FOWManage.transform.localScale = new Vector3(Camera.main.orthographicSize * cFOWmul, Camera.main.orthographicSize * cFOWmul/2);
@@ -23,9 +26,10 @@ public class CameraController : MonoBehaviour {
         v.y = 0;
         v.z = -10;
         transform.localPosition = Anchor.transform.localPosition+v;
+        //transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Anchor.transform.position+v, ref ref_Velocity, Smoothing);
         /*
         Vector3 dest = Anchor.transform.position-Self.transform.position;
         Self.*/
-        
-	}
+
+    }
 }

@@ -87,7 +87,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1343781141412446}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -1, z: 0, w: 0.00000013113416}
   m_LocalPosition: {x: -1.22, y: 1.6666, z: 0}
   m_LocalScale: {x: 0.50105, y: 0.50105, z: 0.5105}
   m_Children:
@@ -226,6 +226,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_JumpForce: 800
+  m_FlyingSpeed: 800
+  m_WalkingSpeed: 10
+  m_ClimbingSpeed: 6
+  m_GravityScale: 1
   m_CrouchSpeed: 0.36
   m_MovementSmoothing: 0.05
   m_AirControl: 1
@@ -235,6 +239,7 @@ MonoBehaviour:
   m_GroundCheck: {fileID: 4781429593541416}
   m_CeilingCheck: {fileID: 4273114851830996}
   m_CrouchDisableCollider: {fileID: 61592299327544860}
+  m_Rigidbody2D: {fileID: 0}
   m_Walking: 0
   OnLandEvent:
     m_PersistentCalls:
@@ -314,9 +319,6 @@ MonoBehaviour:
   controller: {fileID: 114585464800913474}
   animator: {fileID: 95390227476745222}
   Scope: {fileID: 0}
-  runSpeed: 40
-  climbSpeed: 20
-  diveSpeed: 50
 --- !u!212 &212978050746220752
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -360,7 +362,7 @@ SpriteRenderer:
   m_Size: {x: 0.25, y: 0.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!212 &212981602179987144
