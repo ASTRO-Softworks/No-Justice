@@ -14,8 +14,8 @@ public class PlayerMovement2 : MonoBehaviour {
     public float diveSpeed = 100;
 
     float horizontalMove = 0f;
-    float verticalMove = 0f;
-    float mouseX = 0f;
+    //float verticalMove = 0f;
+    /*float mouseX = 0f;
     float mousey = 0f;
 
     bool jump = false;
@@ -23,10 +23,10 @@ public class PlayerMovement2 : MonoBehaviour {
     bool nearladder = false;
     bool onladder = false;
     bool swimming = false;
-    bool invisible = false;
-    bool dirRight = false;
+    */bool invisible = false;
+    //bool dirRight = false;
 
-
+    
     // Use this for initialization
     void Start () {
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
@@ -39,9 +39,9 @@ public class PlayerMovement2 : MonoBehaviour {
 	void Update () {//Get controll from keyboard
         horizontalMove = Input.GetAxisRaw("Horizontal2") * runSpeed;
 
-        verticalMove = Input.GetAxisRaw("Vertical2");
+       // verticalMove = Input.GetAxisRaw("Vertical2");
 
-        mouseX = Input.GetAxisRaw("Mouse X");
+    //    mouseX = Input.GetAxisRaw("Mouse X");
 
         //Scope.gameObject.GetComponent<Scope>().takeAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
@@ -49,21 +49,21 @@ public class PlayerMovement2 : MonoBehaviour {
 
         if (Input.GetButtonDown("Jump2"))
         {
-            jump = true;
-            onladder = false;
+      //      jump = true;
+        //    onladder = false;
             //Debug.Log("NOT ON LADDER!!!");
             animator.SetBool("IsJumping", true);
         }
 
         if (Input.GetButtonDown("Crouch2"))
         {
-            crouch = true;
-            //animator.SetBool("IsCrouching", true);
+          //  crouch = true;
+            animator.SetBool("IsCrouching", true);
         }
         else if (Input.GetButtonUp("Crouch2"))
         {
-            crouch = false;
-            //animator.SetBool("IsCrouching", false);
+            //crouch = false;
+            animator.SetBool("IsCrouching", false);
         }
         else if (Input.GetButtonDown("Interact2"))//Box hide
         {
@@ -93,7 +93,7 @@ public class PlayerMovement2 : MonoBehaviour {
         else if (Input.GetButtonDown("Fire2"))//"Feiaaaar"
         {
             Scope.gameObject.GetComponent<Scope>().Shoot(true);
-        }
+        }/*
         else if (verticalMove>0)
         {
             if (nearladder)
@@ -102,7 +102,7 @@ public class PlayerMovement2 : MonoBehaviour {
             }
             //animator.SetBool("IsCrouching", false);
         }
-
+        
         if (onladder) verticalMove *= climbSpeed;
         else if (swimming) {
             //Debug.Log("Diving Down! " + verticalMove.ToString());
@@ -110,26 +110,27 @@ public class PlayerMovement2 : MonoBehaviour {
             //Debug.Log("Diving Down! "+verticalMove.ToString()+" "+diveSpeed.ToString());
         }
         //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
-
+        */
     }
 
     void OnTriggerEnter2D(Collider2D collider)
     {
+        /*
         if (collider.CompareTag("Ladder"))
         {
             nearladder = true;
 
             //Debug.Log("Ladder");
-        }
+        }*//*
         else if (collider.CompareTag("Water"))
         {
             swimming = true;
-        }
+        }*/
 
     }
 
     void OnTriggerExit2D(Collider2D collider)
-    {
+    {/*
         if (collider.CompareTag("Ladder"))
         {
             nearladder = false;
@@ -141,13 +142,13 @@ public class PlayerMovement2 : MonoBehaviour {
         {
             swimming = false;
         }
-
+        */
     }
 
     public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
-        onladder = false;
+       // onladder = false;
         //Debug.Log("NOT ON LADDER 'COS LANDED!!!");
     }
 
@@ -158,10 +159,10 @@ public class PlayerMovement2 : MonoBehaviour {
 
     void FixedUpdate()
     {
-        dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
+        //dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         //controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming); 
-        jump = false;
+        //jump = false;
     }
 }

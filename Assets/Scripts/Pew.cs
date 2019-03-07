@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Pew : MonoBehaviour {
-    bool b = false;
+    //bool b = false;
     float timeTolive = 2;
     float createdTime;
 

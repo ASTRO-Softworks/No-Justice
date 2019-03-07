@@ -43,7 +43,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         /* if (Math.Abs(Math.Sin(Time.time)) < 0.1)         {             controller.Jump();         }*/
         
         //Массив всех объектов в радиусе видимости
-        Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 0.1f);
+        //Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 0.1f);
         
         /*Не знаю что пока с этим делать
         foreach(Collider2D item in cld)
@@ -56,13 +56,13 @@ public abstract class AbstractCharacter : MonoBehaviour
                 controller.Climb();
         } */           }      protected bool Climb()
     {
-        controller.Toggle_Fly();
+        controller.Toggle_Climb();
         animator.SetBool("IsClimbing", true);
 
         return true;
     }     protected bool Swim()
     {
-        controller.Toggle_Fly();
+        controller.Toggle_Swim();
         animator.SetBool("IsSwimming", true);
 
         return true;

@@ -9,5 +9,7 @@ using System.Collections;
 
 public abstract class EnemyAI:MonoBehaviour
 {
-    
+    public void Detection()
+    {
+    }    
 }

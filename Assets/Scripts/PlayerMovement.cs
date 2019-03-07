@@ -15,17 +15,17 @@ public class PlayerMovement : MonoBehaviour {
     */
     float horizontalMove = 0f;
     float verticalMove = 0f;
-    float mouseX = 0f;
-    float mousey = 0f;
-
-    bool jump = false;
-    bool crouch = false;
-    bool nearladder = false;
-    bool onladder = false;
-    bool swimming = false;
+ //   float mouseX = 0f;
+//    float mousey = 0f;
+    
+   // bool jump = false;
+   // bool crouch = false;
+  //  bool nearladder = false;
+//    bool onladder = false;
+  //  bool swimming = false;
     bool flying = false;
     bool invisible = false;
-    bool dirRight = false;
+    //bool dirRight = false;*/
 
 
     // Use this for initialization
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour {
 
         verticalMove = Input.GetAxisRaw("Vertical");
 
-        mouseX = Input.GetAxisRaw("Mouse X");
+        //mouseX = Input.GetAxisRaw("Mouse X");
 
         //Scope.gameObject.GetComponent<Scope>().takeAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
@@ -51,8 +51,8 @@ public class PlayerMovement : MonoBehaviour {
 
         if (Input.GetButtonDown("Jump"))
         {
-            jump = true;
-            onladder = false;
+            //jump = true;
+            //onladder = false;
             //Debug.Log("NOT ON LADDER!!!");
             controller.Jump();
             animator.SetBool("IsJumping", true);
@@ -60,17 +60,19 @@ public class PlayerMovement : MonoBehaviour {
 
         if (Input.GetButtonDown("Crouch"))
         {
-            crouch = true;
-            if (crouch) controller.Toggle_Crouch();
-            else controller.Toggle_Walk();
+            //crouch = true;
+            //if (crouch) 
+            controller.Toggle_Crouch();
+            //else controller.Toggle_Walk();
             animator.SetBool("IsCrouching", true);
         }
         else if (Input.GetButtonUp("Crouch"))
         {
 
-            crouch = false;
-            if (crouch) controller.Toggle_Crouch();
-            else controller.Toggle_Walk();
+            //crouch = false;
+            //if (crouch) controller.Toggle_Crouch();
+          //  else 
+            controller.Toggle_Walk();
 
             animator.SetBool("IsCrouching", false);
         }
@@ -111,14 +113,14 @@ public class PlayerMovement : MonoBehaviour {
         {
             Scope.gameObject.GetComponent<Scope>().Shoot(true);
         }
-        else if (verticalMove>0)
+       /* else if (verticalMove>0)
         {
             if (nearladder)
             {
                 onladder = true;
             }
             //animator.SetBool("IsCrouching", false);
-        }
+        }*/
         /*
         if (onladder) verticalMove *= climbSpeed;
         else if (swimming) {
@@ -131,7 +133,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     void OnTriggerEnter2D(Collider2D collider)
-    {
+    {/*
         if (collider.CompareTag("Ladder"))
         {
             nearladder = true;
@@ -142,14 +144,14 @@ public class PlayerMovement : MonoBehaviour {
         {
             swimming = true;
         }
-
+        */
     }
 
     void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.CompareTag("Ladder"))
+      /*  if (collider.CompareTag("Ladder"))
         {
-            nearladder = false;
+            //nearladder = false;
             //Onladder = false;
             //Debug.Log("NotLadder");
             
@@ -158,13 +160,13 @@ public class PlayerMovement : MonoBehaviour {
         {
             swimming = false;
         }
-
+        */
     }
 
     public void OnLanding()
     {
         animator.SetBool("IsJumping", false);
-        onladder = false;
+        //onladder = false;
         //Debug.Log("NOT ON LADDER 'COS LANDED!!!");
     }
 
@@ -179,6 +181,6 @@ public class PlayerMovement : MonoBehaviour {
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         controller.Move(new Vector2(horizontalMove,verticalMove), Camera.main.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position); 
-        jump = false;
+        //jump = false;
     }
 }

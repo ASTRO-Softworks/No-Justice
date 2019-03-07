@@ -10,13 +10,13 @@ public class Hide : MonoBehaviour
     public Rigidbody2D rb;
     public List<GameObject> list;
 
-    private float pTime = 0;
-    private float pPos = 0;
-    private float dal=0.05f;
-    private float vel = 0f;
-    private float walkingOffset = 0.5f;
-    private float crouchingOffset = 0.1f;
-    private float m_MovementSmoothing = 0.5f;
+    //private float pTime = 0;
+    //private float pPos = 0;
+    //private float dal=0.05f;
+    //private float vel = 0f;
+    //private float walkingOffset = 0.5f;
+    //private float crouchingOffset = 0.1f;
+    //private float m_MovementSmoothing = 0.5f;
     private Vector3 m_Pos;
 
     public void Use(GameObject obj, bool use)
@@ -27,7 +27,7 @@ public class Hide : MonoBehaviour
             isUsed = !isUsed;
         }
         m_obj = obj;
-        vel = m_obj.GetComponent<Rigidbody2D>().velocity.x;
+        //vel = m_obj.GetComponent<Rigidbody2D>().velocity.x;
     }
 
 	// Use this for initialization

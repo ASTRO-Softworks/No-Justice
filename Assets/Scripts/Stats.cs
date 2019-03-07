@@ -5,12 +5,12 @@ using UnityEngine;
 public class Stats : MonoBehaviour {
 
     public float health = 100f;
-    private float maxHealth;
+    //private float maxHealth;
     public float defence = 100f;
 
     void Start()
     {
-        maxHealth = health;
+        //maxHealth = health;
     }
 
 

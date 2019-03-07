@@ -6,7 +6,7 @@ public class WeaponList : MonoBehaviour {
 
     public List<GameObject> weaponPull;
     //public Transform scope;
-    private int weaponIx;
+//    private int weaponIx;
     private GameObject curWeapon;
 
 
@@ -24,7 +24,7 @@ public class WeaponList : MonoBehaviour {
     public GameObject ChangeWeapon(int i)//NOT DONE!!!!
     {
         weaponPull[i] = curWeapon;
-        weaponIx = i;
+       // weaponIx = i;
         //curWeapon = weaponPull[i];
         curWeapon = Instantiate(weaponPull[i],gameObject.transform);
         return curWeapon;
