@@ -103,6 +103,7 @@ public class CharacterController2D : MonoBehaviour
                     OnLandEvent.Invoke();
             }
         }
+       
         //Jump update
 
         //If he hit celling accelerating downwards(2nd part of jump)

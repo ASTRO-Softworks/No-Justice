@@ -29,19 +29,28 @@ public class EnemyController : AbstractCharacter {
     //bool dirRight = false;
   //  public EnemyAI script;//пока не используется
     
-    void OnTriggerEnter2D(Collider2D collider)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-       
-
+       /*
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (collision.gameObject.transform.position.y > transform.position.y - 0.5f)
+                runSpeed = runSpeed * (((transform.position.x - collision.gameObject.transform.position.x) * runSpeed) > 0 ? 1: -1);
+           
+        }*/    
     }
-    void OnTriggerExit2D(Collider2D collider)
+   /* override void OnTriggerEnter2D(Collider2D collider)
     {
-
+    }*/
+    void OnCollisionExit2D(Collision2D collision)
+    {
     }
-    
     // Use this for initialization
     void Start () {
-
+        runSpeed = 0.3f;
+        
+// This would cast rays only against colliders in layer 8, so we just inverse the mask.
+    layerMask = ~layerMask;
        // Scope = transform.Find("Aimer");
      //   resp = transform.position;
 	}
@@ -65,40 +74,75 @@ public class EnemyController : AbstractCharacter {
 	}
     public RaycastHit2D hit;
     public Transform Scope;// = GameObject.Find("Aimer");
-    private int counter=0;
+    private int counterGun=0;
+    private int counterReverse=0;
+    // Bit shift the index of the layer (8) to get a bit mask
+    int layerMask = 1 << 2;
+
+   
     void FixedUpdate()
     {   
         //if (counter)
-runSpeed = (float)Math.Sin(Time.time)/3;
-
+//        runSpeed = (float)Math.Sin(Time.time)/3;
+        
         Vector2 direction = new Vector2(runSpeed, 0);
-        Vector2 pos = new Vector2(transform.position.x+0.5f * runSpeed/Math.Abs(runSpeed), transform.position.y-0.5f);
-//        Ray ray = new Ray(transform.position, direction);
-        hit = Physics2D.Raycast(pos, direction, 7.0f);
-        //Debug.DrawRay(transform.position, direction, Color.blue);
-        if (hit)
-            if (hit.collider.gameObject.CompareTag("Player"))
-            {
-                Scope.gameObject.GetComponent<Scope>().takeAim(hit.collider.gameObject.transform.position);
-                if (counter == 0)
-                {
-                    Scope.gameObject.GetComponent<Scope>().Shoot(false);
-                    Scope.gameObject.GetComponent<Scope>().Shoot(true);
-                    Scope.gameObject.GetComponent<Scope>().Shoot(false);
-                    counter = 30;
-                }
-                if (counter > 0) 
-                    counter--;
-                Debug.Log(hit.collider.gameObject.tag);
-                runSpeed = 0;
-            }
-        //    Physics2D.Raycast( new Vector2(transform.position.x-1.0f, transform.position.y), Vector2.left, , hit, 2.0f);
-        /*if(hit.collider != null)
+        for(float i = -3; i < 3; i += 0.05f)
         {
-//            Debug.Log(hit.collider.tag);
-            if(hit.collider.tag == "Player") 
-                Crouch();
-        }*/
-        controller.Move(new Vector2(runSpeed, 0), direction);
+            direction = new Vector2(runSpeed, i);
+            Vector2 pos = new Vector2(transform.position.x+0.5f * runSpeed/Math.Abs(runSpeed), transform.position.y - 0.5f);
+    //        Ray ray = new Ray(transform.position, direction);
+            hit = Physics2D.Raycast(pos, direction, 7.0f, layerMask);
+            //Debug.DrawRay(transform.position, direction, Color.blue);
+            if (hit)
+            {
+                if (hit.collider.gameObject.CompareTag("Player"))
+                {
+                    Scope.gameObject.GetComponent<Scope>().takeAim(hit.collider.gameObject.transform.position);
+                    if (counterGun == 0)
+                    {
+                        Scope.gameObject.GetComponent<Scope>().Shoot(false);
+                        Scope.gameObject.GetComponent<Scope>().Shoot(true);
+                        Scope.gameObject.GetComponent<Scope>().Shoot(false);
+                        counterGun = 50;
+                    }
+                }
+            }
+        }
+        Collider2D[] points = Physics2D.OverlapBoxAll(new Vector2(transform.position.x + runSpeed * 2.5f, transform.position.y - 0.8f), new Vector2(0.3f,0.3f), 0.0f);
+        //Debug.Log(points[0]);
+        if (points.Length > 0)
+        foreach(Collider2D point in points)
+        {
+            
+            if(!point.gameObject.CompareTag("Ground") && !point.gameObject.CompareTag("Ladder"))
+            {
+          //      counterReverse = 50;
+                runSpeed = -runSpeed;
+            }
+        }
+        else 
+        {
+        //    counterReverse = 50;
+            runSpeed = -runSpeed;
+        }
+        points = Physics2D.OverlapBoxAll(new Vector2(transform.position.x + runSpeed * 2f, transform.position.y), new Vector2(0.1f,0.3f), 0.0f);
+        foreach(Collider2D point in points)
+        {
+            if(point.gameObject.CompareTag("Enemy") || point.gameObject.CompareTag("Ground"))
+            {
+              
+                //counterReverse = 50;
+                runSpeed = -runSpeed;
+                break;
+            }
+        }
+        if (counterGun > 0) 
+            counterGun--;
+        if (counterReverse > 0) 
+            counterReverse--;
+        direction = new Vector2(runSpeed, 0);
+          
+        if(counterGun == 0 && counterReverse == 0)
+            controller.Move(new Vector2(runSpeed, 0), direction);
     }
 }

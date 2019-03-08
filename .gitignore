@@ -53,6 +53,8 @@ ExportedObj/
 
 *.pidb.meta
 
+*.png.meta
+
 *.pdb.meta
 
 

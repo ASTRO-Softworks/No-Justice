@@ -54,7 +54,20 @@ public abstract class AbstractCharacter : MonoBehaviour
 
             if (item.CompareTag("Ladder"))
                 controller.Climb();
-        } */           }      protected bool Climb()
+        } */           }     void OnTriggerEnter2D(Collider2D collider)
+    {/*
+        if (collider.CompareTag("Ladder"))
+        {
+            nearladder = true;
+
+            //Debug.Log("Ladder");
+        }
+        else if (collider.CompareTag("Water"))
+        {
+            swimming = true;
+        }
+        */
+    }     protected bool Climb()
     {
         controller.Toggle_Climb();
         animator.SetBool("IsClimbing", true);
@@ -80,9 +93,10 @@ public abstract class AbstractCharacter : MonoBehaviour
         return true;
     }     protected bool Walk()
     {
+
         controller.Toggle_Walk();
         animator.SetBool("IsCrouching", false);
-        animator.SetFloat("Speed", Math.Abs(runSpeed));
+        animator.SetFloat("Speed", runSpeed);
 
         return true;
     }     protected bool Jump()
