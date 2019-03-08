@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : AbstractCharacter
+{
 
     public CharacterController2D controller;
     public Animator animator;
@@ -55,6 +56,7 @@ public class PlayerMovement : MonoBehaviour {
             onladder = false;
             //Debug.Log("NOT ON LADDER!!!");
             controller.Jump();
+            //Jump();
             animator.SetBool("IsJumping", true);
         }
 
@@ -131,21 +133,18 @@ public class PlayerMovement : MonoBehaviour {
         */
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    public override void _OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.CompareTag("Ladder"))
-        {
-            nearladder = true;
-
-            //Debug.Log("Ladder");
-        }
-        else if (collider.CompareTag("Water"))
-        {
-            swimming = true;
-            controller.Toggle_Swim();
-        }
-
+        //throw new System.NotImplementedException();
+        return;
     }
+
+    public override void _OnTriggerExit2D(Collider2D collider)
+    {
+        //throw new System.NotImplementedException();
+        return;
+    }
+
 
     void OnTriggerExit2D(Collider2D collider)
     {

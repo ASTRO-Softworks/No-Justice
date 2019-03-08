@@ -6,14 +6,14 @@ using UnityEngine.Events;
 public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private float m_JumpForce = 25f;                           // Does nothing
-    [SerializeField] private float m_JumpHieght = 25f;                          // Top jump speed
-    [SerializeField] private float m_JumpDuration = 0.5f;                       // Jump duration
-    [SerializeField] private float m_FlyingSpeed = 800f;                        // Flying speed multiplier
-    [SerializeField] private float m_WalkingSpeed = 800f;                       // Walking speed multiplier
-    [SerializeField] private float m_ClimbingSpeed = 300f;                      // Climbing speed multiplier
-    [SerializeField] private float m_SwimingForce = 600f;                       // Swimming force multiplier
-    [SerializeField] private float m_CrouchSpeed = 300;                         // Crouching speed multiplier
-    [SerializeField] private float m_GravityScale = 1f;                         // Default non-zero gravity
+    [SerializeField] public float m_JumpHieght = 25f;                          // Top jump speed
+    [SerializeField] public float m_JumpDuration = 0.5f;                       // Jump duration
+    [SerializeField] public float m_FlyingSpeed = 800f;                        // Flying speed multiplier
+    [SerializeField] public float m_WalkingSpeed = 800f;                       // Walking speed multiplier
+    [SerializeField] public float m_ClimbingSpeed = 300f;                      // Climbing speed multiplier
+    [SerializeField] public float m_SwimingForce = 600f;                       // Swimming force multiplier
+    [SerializeField] public float m_CrouchSpeed = 300;                         // Crouching speed multiplier
+    [SerializeField] public float m_GravityScale = 1f;                         // Default non-zero gravity
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
@@ -33,7 +33,7 @@ public class CharacterController2D : MonoBehaviour
 
     private Vector2 m_Velocity = Vector2.zero;
     //private String condition = "Walk";
-    public enum Condition
+    public enum e_Condition
     {
         Walk,
         Crouch,
@@ -45,7 +45,7 @@ public class CharacterController2D : MonoBehaviour
     }
     //BitArray wasDoing = new BitArray((int)Condition.LEN, false);
     //BitArray wantDoing = new BitArray((int)Condition.LEN, false);
-    [SerializeField] private Condition condition;
+    [SerializeField] private e_Condition condition;
 
 
     [Header("Events")]
@@ -58,10 +58,15 @@ public class CharacterController2D : MonoBehaviour
 
     public BoolEvent OnCrouchEvent;
     public bool m_wasCrouching = false;//PRIVATE
-    
-    
-    
-    
+
+    public e_Condition Condition
+    {
+        get
+        {
+            return condition;
+        }
+    }
+
     private void Awake()
     {
         
@@ -166,11 +171,11 @@ public class CharacterController2D : MonoBehaviour
         //выбираем сценарий работы контроллера
         switch (condition)
         {
-            case Condition.Fly: _Logic_Fly(moveDirection); break;
-            case Condition.Walk: _Logic_Walk(moveDirection); break;
-            case Condition.Crouch: _Logic_Crouch(moveDirection); break;
-            case Condition.Climb: _Logic_Climb(moveDirection); break;
-            case Condition.Swim: _Logic_Swim(moveDirection); break;
+            case e_Condition.Fly: _Logic_Fly(moveDirection); break;
+            case e_Condition.Walk: _Logic_Walk(moveDirection); break;
+            case e_Condition.Crouch: _Logic_Crouch(moveDirection); break;
+            case e_Condition.Climb: _Logic_Climb(moveDirection); break;
+            case e_Condition.Swim: _Logic_Swim(moveDirection); break;
         }
 
 
@@ -191,19 +196,19 @@ public class CharacterController2D : MonoBehaviour
     {
         switch (condition)
         {
-            case Condition.Fly: return;
-            case Condition.Climb: return;
-            case Condition.Swim: return;
-            case Condition.Crouch: _Destruct_Crouch(); break;
-            case Condition.Walk: _Destruct_Walk(); break;
+            case e_Condition.Fly: return;
+            case e_Condition.Climb: return;
+            case e_Condition.Swim: return;
+            case e_Condition.Crouch: _Destruct_Crouch(); break;
+            case e_Condition.Walk: _Destruct_Walk(); break;
         }
-        condition = Condition.Fly;
+        condition = e_Condition.Fly;
     }
 
     public void Toggle_Fly()
     {
         _Mechanics_Destruct_Manager();
-        condition = Condition.Fly;
+        condition = e_Condition.Fly;
         Debug.Log("Toggle_Fly");
     }
     private void _Logic_Fly(Vector2 direction)
@@ -223,7 +228,7 @@ public class CharacterController2D : MonoBehaviour
         //Enabling gravity
         m_Rigidbody2D.gravityScale = m_GravityScale;
 
-        condition = Condition.Walk;
+        condition = e_Condition.Walk;
         Debug.Log("Toggle_Walk");
     }
     private void _Logic_Walk(Vector2 direction)
@@ -251,7 +256,7 @@ public class CharacterController2D : MonoBehaviour
         if (m_CrouchDisableCollider != null)
             m_CrouchDisableCollider.enabled = false;
 
-        condition = Condition.Crouch;
+        condition = e_Condition.Crouch;
         Debug.Log("Toggle_Crouch");
     }
     private void _Logic_Crouch(Vector2 direction)
@@ -275,7 +280,7 @@ public class CharacterController2D : MonoBehaviour
     {
         _Mechanics_Destruct_Manager();
         m_JumpCycle = 0f;
-        condition = Condition.Climb;
+        condition = e_Condition.Climb;
         Debug.Log("Toggle_Climb");
     }
     private void _Logic_Climb(Vector2 direction)
@@ -289,7 +294,7 @@ public class CharacterController2D : MonoBehaviour
     public void Toggle_Swim()
     {
         _Mechanics_Destruct_Manager();
-        condition = Condition.Swim;
+        condition = e_Condition.Swim;
         Debug.Log("Toggle_Swim");
     }
     public void _Logic_Swim(Vector2 direction)
