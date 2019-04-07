@@ -16,6 +16,7 @@ public class WeaponList : MonoBehaviour {
 	
     public Weapon ChangeWeapon(int i)
     {
+        Destroy(curWeapon.gameObject);
         curWeapon = Instantiate(weaponPull[i], gameObject.transform);
         return curWeapon;
     }

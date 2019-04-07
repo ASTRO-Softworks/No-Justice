@@ -18,7 +18,7 @@ public class SawTrap : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        AltAbstractCharacter Char = col.gameObject.GetComponent<AltAbstractCharacter>();
+        AbstractCharacter Char = col.gameObject.GetComponent<AbstractCharacter>();
         if (Char) Char.Die();
     }
 
