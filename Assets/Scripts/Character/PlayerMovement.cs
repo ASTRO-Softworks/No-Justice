@@ -9,7 +9,7 @@ public class PlayerMovement : AbstractCharacter
     //public CharacterController2D controller;
     //public Animator animator;
 //    public Transform Scope;
-
+	public Vector3 SpawnPoint;
     
     public float climbSpeed = 20f;
     public float diveSpeed = 100;
@@ -136,11 +136,19 @@ public class PlayerMovement : AbstractCharacter
         animator.SetBool("IsCrouching", isCrouching);
     }
 
+<<<<<<< HEAD
     override public void _Die()
     {
         transform.position = SpawnPoint;
     }
 
+=======
+	override public void _Die()
+    {
+        transform.position = SpawnPoint;
+    }
+	
+>>>>>>> 99f83ab94ab751d498903c6f14641d9c0e303d15
     override protected void _FixedUpdate()
     {
         //dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
