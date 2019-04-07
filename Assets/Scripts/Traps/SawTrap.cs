@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 using System.Collections;
-=======
-﻿using System.Collections;
->>>>>>> 99f83ab94ab751d498903c6f14641d9c0e303d15
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,11 +18,9 @@ public class SawTrap : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D col)
     {
-<<<<<<< HEAD
-        AltAbstractCharacter Char = col.gameObject.GetComponent<AltAbstractCharacter>();
-=======
+
         AbstractCharacter Char = col.gameObject.GetComponent<AbstractCharacter>();
->>>>>>> 99f83ab94ab751d498903c6f14641d9c0e303d15
+
         if (Char) Char.Die();
     }
 
@@ -45,10 +39,8 @@ public class SawTrap : MonoBehaviour
             _dist -= modspeed * Time.deltaTime;
             if (_dist <= 0) dir = true;
         }
-        
+
     }
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> 99f83ab94ab751d498903c6f14641d9c0e303d15
+

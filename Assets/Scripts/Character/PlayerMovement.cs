@@ -27,11 +27,12 @@ public class PlayerMovement : AbstractCharacter
     */
     bool invisible = false;
     //bool dirRight = false;
-    public Vector3 SpawnPoint;
+    //public Vector3 SpawnPoint;
 
     // Use this for initialization
     void Start()
     {
+        SpawnPoint = transform.position;
         runSpeed = 40f;
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
         //new Quaternion()
@@ -136,19 +137,12 @@ public class PlayerMovement : AbstractCharacter
         animator.SetBool("IsCrouching", isCrouching);
     }
 
-<<<<<<< HEAD
     override public void _Die()
     {
         transform.position = SpawnPoint;
     }
 
-=======
-	override public void _Die()
-    {
-        transform.position = SpawnPoint;
-    }
-	
->>>>>>> 99f83ab94ab751d498903c6f14641d9c0e303d15
+
     override protected void _FixedUpdate()
     {
         //dirRight = horizontalMove > 0?true:horizontalMove<0?false:dirRight;//((Camera.main.ScreenToWorldPoint(Input.mousePosition).x - transform.localPosition.x) > 0);
