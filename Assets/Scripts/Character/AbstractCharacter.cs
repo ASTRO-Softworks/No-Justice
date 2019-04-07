@@ -142,6 +142,14 @@ public abstract class AbstractCharacter : MonoBehaviour
         
     }
     */
+	
+	public abstract void _Die();
+    public void Die()
+    {
+        _Die();
+    }
+	
+	
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Water"))
