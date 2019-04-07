@@ -12,25 +12,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] private bool b_Crouch_strobe = false;
     [SerializeField] private bool b_Fly_strobe = false;
 
-    /*
-     public enum State
-    {
-        Walk,
-        Crouch,
-        Climb,
-        Swim,
-        Fly,
-        LEN
-    }
-    */
-
-    //public Transform Scope;
-    /* Возможно понадобится
-    public float climbSpeed = 20f;
-    public float diveSpeed = 100;*/
-
-    //VARIABLES
-
     //Enviroment
     int i_water_counter = 0;
     int i_ladder_counter = 0;
@@ -77,20 +58,6 @@ public abstract class AbstractCharacter : MonoBehaviour
         };
 
 
-    /*Надеюсь не понадобится
-     
-    float horizontalMove = 0f;
-    float verticalMove = 0f;    
-    float mouseX = 0f;
-    float mousey = 0f;
-    bool jump = false;
-    bool crouch = false;
-    bool nearladder = false;
-    bool onladder = false;
-    bool swimming = false;
-    bool invisible = false;
-    bool dirRight = false;*/
-
     void Start()
     {
         //  Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
@@ -114,34 +81,15 @@ public abstract class AbstractCharacter : MonoBehaviour
         b_interact = false;
         if (b_Crouch_strobe) b_crouch = false;//b_req_fly
         if (b_Fly_strobe) b_req_fly = false;
-        //оно ходит
-        /* if (Math.Abs(Math.Sin(Time.time)) < 0.1)
-        {
-            controller.Jump();
-        }*/
-
-        //Массив всех объектов в радиусе видимости
-        //Collider2D[] cld = Physics2D.OverlapCircleAll(transform.position, 0.1f);
-
-        /*Не знаю что пока с этим делать
-        foreach(Collider2D item in cld)
-        {
-            if(item.tag == "Ladder")
-            Debug.Log(item.tag );
-        
-            if (item.CompareTag("Ladder"))
-                controller.Climb();
-        } */
-
-//        Debug.Log("Water:" + i_water_counter.ToString());
-  //      Debug.Log("Ladder:" + i_ladder_counter.ToString());
     }
-    /*
-    void LateUpdate()
+
+    public abstract void _Die();
+
+    public void Die()
     {
-        
+        _Die();
     }
-    */
+
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Water"))

@@ -5,31 +5,9 @@ using System;
 
 
 public class EnemyController : AbstractCharacter {
-    /* Видимо не нужно уже
-    public CharacterController2D controller;
-    public Animator animator;
-    public Transform Scope;
-    private Vector3 resp;
-
-    public float runSpeed = 40f;
-    public float climbSpeed = 20f;
-    public float diveSpeed = 100;
-
-    float horizontalMove = 0f;
-    float verticalMove = 0f;
-    float mouseX = 0f;
-    float mousey = 0f;
-    */
-   //Пусть пока побудет
-   // bool jump = false;
-    //bool crouch = false;
-    //bool nearladder = false;
-    //bool onladder = false;
-    //bool swimming = false;
-    //bool invisible = false;
-    //bool dirRight = false;
-  //  public EnemyAI script;//пока не используется
     private Memory memory = new Memory();
+    public Vector3 SpawnPoint;
+
     void OnCollisionEnter2D(Collision2D collision)
     {
        /*
@@ -82,6 +60,11 @@ public class EnemyController : AbstractCharacter {
     private float seenDistanse = 10.0f;
    
     private Vector2 direction = new Vector2(0, 0);
+
+    override public void _Die()
+    {
+        transform.position = SpawnPoint;
+    }
 
     protected override void _FixedUpdate()
     {

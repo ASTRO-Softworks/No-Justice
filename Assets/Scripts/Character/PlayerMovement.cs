@@ -27,7 +27,7 @@ public class PlayerMovement : AbstractCharacter
     */
     bool invisible = false;
     //bool dirRight = false;
-
+    public Vector3 SpawnPoint;
 
     // Use this for initialization
     void Start()
@@ -134,6 +134,11 @@ public class PlayerMovement : AbstractCharacter
     public void OnCrouching(bool isCrouching)
     {
         animator.SetBool("IsCrouching", isCrouching);
+    }
+
+    override public void _Die()
+    {
+        transform.position = SpawnPoint;
     }
 
     override protected void _FixedUpdate()
