@@ -19,6 +19,7 @@ public class Scope : MonoBehaviour
     {
         weapon = gameObject.GetComponent<WeaponList>().GetWeapon();
         
+
     }
         
     void Update()

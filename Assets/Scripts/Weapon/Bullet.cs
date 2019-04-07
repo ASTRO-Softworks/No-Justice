@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity;
 
 public class Bullet : MonoBehaviour {
 
@@ -16,14 +17,21 @@ public class Bullet : MonoBehaviour {
     //     rb = gameObject.GetComponent<Rigidbody2D>();
     //rb.velocity = transform.right * speed;
     //}
-    private bool cankill = false;
+    private bool cankill = true;
 
+    void Start() {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)transform.position, 0.1f);
 
+        foreach (Collider2D collider in colliders)
+        {
+            if (collider.gameObject.CompareTag("Enemy") || collider.gameObject.CompareTag("Player"))
+            {
+                cankill = false;
+            }
+        }
+    }
     void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        //CharacterController2D ctr = hitInfo.gameObject.GetComponent<CharacterController2D>();
-        //FizzCtr.Damage(10);
-        //ctr
         if (!hitInfo.isTrigger)//hitInfo.gameObject.CompareTag("Enemy") || hitInfo.gameObject.CompareTag("Player"))
         {
             if (cankill)
@@ -34,18 +42,17 @@ public class Bullet : MonoBehaviour {
                 {
                     hitInfo.gameObject.GetComponent<Stats>().Damage(26);
                 }
-                //hitInfo.gameObject.GetComponent<Stats>().Damage(26);
-                //        Debug.Log(hitInfo.gameObject.name);
             }
-            //gameObject.transform.parent.loca
-        }
+         }
     }
 
     void OnTriggerExit2D(Collider2D colider)
     {
         if (colider.CompareTag("Player") || colider.CompareTag("Enemy"))
+        {
             cankill = true;
-        if (colider.CompareTag("MainCamera"))
+        }
+            if (colider.CompareTag("MainCamera"))
         {
             Destroy(gameObject);
             //~Bullet();

@@ -80,8 +80,8 @@ public class CharacterController2D : MonoBehaviour
 
     private void Start()
     {
-        m_GroundCheck = new Vector2(0 , - (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
-        m_CeilingCheck = new Vector2(0 ,(transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
+        m_GroundCheck = new Vector2(0 , - transform.localScale.y * (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
+        m_CeilingCheck = new Vector2(0 , transform.localScale.y * (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         /*        if (m_Rigidbody2D == null) Debug.Log("FAILED TO REACH RIGIDBODY");
                 else Debug.Log("REACHED RIGIDBODY SUCCESFULY");
@@ -181,7 +181,7 @@ public class CharacterController2D : MonoBehaviour
 
     public void Jump()
     {
-        Debug.Log(transform.position + (Vector3)m_GroundCheck);
+        //Debug.Log(transform.position + (Vector3)m_GroundCheck);
         if (m_Grounded)
         {
 
