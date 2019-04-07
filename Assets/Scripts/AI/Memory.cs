@@ -19,7 +19,6 @@ class Memory
     }
     public void setLastSeenPosition(Vector2 vector)
     {
-        Debug.Log("Seen " + vector);
         isSeen = true;
         this.lastSeenPosition = vector;
     }

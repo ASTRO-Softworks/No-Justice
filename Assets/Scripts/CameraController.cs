@@ -6,29 +6,15 @@ public class CameraController : MonoBehaviour
 {
 
     public GameObject Anchor;//Object? to which camera attached
-    const float cFOWmul = 5.0f;
-    public GameObject FOWManage;
-    // Use this for initialization
-    void Start()
-    {
-        //FOWManage.transform.localScale = new Vector3(Camera.main.orthographicSize * cFOWmul, Camera.main.orthographicSize * cFOWmul/2);
-        //FOW.bounds.size.x = Camera.main.orthographicSize * 5.0;
-        //gameObject.GetComponent<Camera>().orthographicSize
-        //
-
-    }
-
+                             //    const float cFOWmul = 5.0f;
+                             //    public GameObject FOWManage;
+    Vector3 modifyVector = new Vector3(0, 0, -10);
     // Update is called once per frame
     void Update()
     {
-        Vector3 v;
-        v.x = 0;
-        v.y = 0;
-        v.z = -10;
-        transform.localPosition = Anchor.transform.localPosition + v;
-        /*
-        Vector3 dest = Anchor.transform.position-Self.transform.position;
-        Self.*/
-
+        if (Anchor != null)
+        {
+            transform.localPosition = Anchor.transform.localPosition + modifyVector;
+        }
     }
 }

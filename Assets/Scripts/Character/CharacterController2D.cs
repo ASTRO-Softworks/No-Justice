@@ -17,8 +17,8 @@ public class CharacterController2D : MonoBehaviour
     [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
     [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
     [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
-    [SerializeField] private Transform m_GroundCheck;                           // A position marking where to check if the player is grounded.
-    [SerializeField] private Transform m_CeilingCheck;                          // A position marking where to check for ceilings
+    private Vector2 m_GroundCheck;                           // A position marking where to check if the player is grounded.
+    private Vector2 m_CeilingCheck;                          // A position marking where to check for ceilings
     [SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
     private Rigidbody2D m_Rigidbody2D;                                          // Rigidbody attached to cheracter
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -33,7 +33,7 @@ public class CharacterController2D : MonoBehaviour
 
     private Vector2 m_Velocity = Vector2.zero;
     //private String condition = "Walk";
-    public enum Condition
+    public enum State
     {
         Walk,
         Crouch,
@@ -45,7 +45,7 @@ public class CharacterController2D : MonoBehaviour
     }
     //BitArray wasDoing = new BitArray((int)Condition.LEN, false);
     //BitArray wantDoing = new BitArray((int)Condition.LEN, false);
-    [SerializeField] private Condition condition;
+    [SerializeField] private State condition;
 
 
     [Header("Events")]
@@ -58,13 +58,18 @@ public class CharacterController2D : MonoBehaviour
 
     public BoolEvent OnCrouchEvent;
     public bool m_wasCrouching = false;//PRIVATE
-    
-    
-    
-    
+
+    public State Condition
+    {
+        get
+        {
+            return condition;
+        }
+    }
+
     private void Awake()
     {
-        
+
 
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
@@ -75,10 +80,12 @@ public class CharacterController2D : MonoBehaviour
 
     private void Start()
     {
+        m_GroundCheck = new Vector2(0 , - (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
+        m_CeilingCheck = new Vector2(0 ,(transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-/*        if (m_Rigidbody2D == null) Debug.Log("FAILED TO REACH RIGIDBODY");
-        else Debug.Log("REACHED RIGIDBODY SUCCESFULY");
-       */ //m_Rigidbody2D.gravityScale = m_GravityScale;
+        /*        if (m_Rigidbody2D == null) Debug.Log("FAILED TO REACH RIGIDBODY");
+                else Debug.Log("REACHED RIGIDBODY SUCCESFULY");
+               */ //m_Rigidbody2D.gravityScale = m_GravityScale;
         Toggle_Walk();
     }
 
@@ -89,8 +96,8 @@ public class CharacterController2D : MonoBehaviour
         m_Grounded = false;
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
-        Collider2D[] Gcolliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
-        Collider2D[] Ccolliders = Physics2D.OverlapCircleAll(m_CeilingCheck.position, k_GroundedRadius, m_WhatIsGround);
+        Collider2D[] Gcolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3) m_GroundCheck, k_GroundedRadius, m_WhatIsGround);
+        Collider2D[] Ccolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3) m_CeilingCheck, k_GroundedRadius, m_WhatIsGround);
 
         foreach (Collider2D collider in Gcolliders)
         {
@@ -103,7 +110,7 @@ public class CharacterController2D : MonoBehaviour
                     OnLandEvent.Invoke();
             }
         }
-       
+
         //Jump update
 
         //If he hit celling accelerating downwards(2nd part of jump)
@@ -118,12 +125,12 @@ public class CharacterController2D : MonoBehaviour
 
         if (m_JumpCycle > 0)
         {
-          //  Debug.Log("JumpCycle:" + m_JumpCycle.ToString());
+            // Debug.Log("JumpCycle:" + m_JumpCycle.ToString());
             //Debug.Log("Jump Force" + (m_JumpHieght * (m_JumpCycle - m_JumpDuration / 2)).ToString());
-            m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity,new Vector2(m_Rigidbody2D.velocity.x,m_JumpHieght*(m_JumpCycle - m_JumpDuration/2)), ref m_Velocity, 0.01f);
+            m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, new Vector2(m_Rigidbody2D.velocity.x, m_JumpHieght * (m_JumpCycle - m_JumpDuration / 2)), ref m_Velocity, 0.01f);
             //m_Rigidbody2D.AddForce(new Vector2(m_Rigidbody2D.velocity.x, m_JumpHieght*(m_JumpCycle -m_JumpDuration / 2)));
             m_JumpCycle -= Time.fixedDeltaTime;
-            
+
         }
 
         //Debug.Log("Grounded: "+m_Grounded.ToString()+"\n"+ "wasGrounded: "+wasGrounded.ToString());
@@ -162,11 +169,11 @@ public class CharacterController2D : MonoBehaviour
         //âûáèðàåì ñöåíàðèé ðàáîòû êîíòðîëëåðà
         switch (condition)
         {
-            case Condition.Fly: _Logic_Fly(moveDirection); break;
-            case Condition.Walk: _Logic_Walk(moveDirection); break;
-            case Condition.Crouch: _Logic_Crouch(moveDirection); break;
-            case Condition.Climb: _Logic_Climb(moveDirection); break;
-            case Condition.Swim: _Logic_Swim(moveDirection); break;
+            case State.Fly: _Logic_Fly(moveDirection); break;
+            case State.Walk: _Logic_Walk(moveDirection); break;
+            case State.Crouch: _Logic_Crouch(moveDirection); break;
+            case State.Climb: _Logic_Climb(moveDirection); break;
+            case State.Swim: _Logic_Swim(moveDirection); break;
         }
 
 
@@ -174,32 +181,47 @@ public class CharacterController2D : MonoBehaviour
 
     public void Jump()
     {
+        Debug.Log(transform.position + (Vector3)m_GroundCheck);
         if (m_Grounded)
         {
+
+
             // Add a vertical force to the player.
             m_Grounded = false;
             m_JumpCycle = m_JumpDuration;
         }
-       
+
     }
 
     private void _Mechanics_Destruct_Manager()
     {
         switch (condition)
         {
-            case Condition.Fly: return;
-            case Condition.Climb: return;
-            case Condition.Swim: return;
-            case Condition.Crouch: _Destruct_Crouch(); break;
-            case Condition.Walk: _Destruct_Walk(); break;
+            case State.Fly: return;
+            case State.Climb: return;
+            case State.Swim: return;
+            case State.Crouch: _Destruct_Crouch(); break;
+            case State.Walk: _Destruct_Walk(); break;
         }
-        condition = Condition.Fly;
+        condition = State.Fly;
+    }
+
+    public void Toggle(State state)
+    {
+        switch (state)
+        {
+            case State.Fly: Toggle_Fly(); break;
+            case State.Climb: Toggle_Climb(); break;
+            case State.Swim: Toggle_Swim(); break;
+            case State.Crouch: Toggle_Crouch(); break;
+            case State.Walk: Toggle_Walk(); break;
+        }
     }
 
     public void Toggle_Fly()
     {
         _Mechanics_Destruct_Manager();
-        condition = Condition.Fly;
+        condition = State.Fly;
         //Debug.Log("Toggle_Fly");
     }
     private void _Logic_Fly(Vector2 direction)
@@ -219,8 +241,8 @@ public class CharacterController2D : MonoBehaviour
         //Enabling gravity
         m_Rigidbody2D.gravityScale = m_GravityScale;
 
-        condition = Condition.Walk;
-       //Debug.Log("Toggle_Walk");
+        condition = State.Walk;
+        //Debug.Log("Toggle_Walk");
     }
     private void _Logic_Walk(Vector2 direction)
     {
@@ -247,7 +269,7 @@ public class CharacterController2D : MonoBehaviour
         if (m_CrouchDisableCollider != null)
             m_CrouchDisableCollider.enabled = false;
 
-        condition = Condition.Crouch;
+        condition = State.Crouch;
         //Debug.Log("Toggle_Crouch");
     }
     private void _Logic_Crouch(Vector2 direction)
@@ -266,12 +288,12 @@ public class CharacterController2D : MonoBehaviour
         if (m_CrouchDisableCollider != null)
             m_CrouchDisableCollider.enabled = true;
     }
-    
+
     public void Toggle_Climb()
     {
         _Mechanics_Destruct_Manager();
         m_JumpCycle = 0f;
-        condition = Condition.Climb;
+        condition = State.Climb;
         //Debug.Log("Toggle_Climb");
     }
     private void _Logic_Climb(Vector2 direction)
@@ -285,12 +307,12 @@ public class CharacterController2D : MonoBehaviour
     public void Toggle_Swim()
     {
         _Mechanics_Destruct_Manager();
-        condition = Condition.Swim;
+        condition = State.Swim;
         //Debug.Log("Toggle_Swim");
     }
     public void _Logic_Swim(Vector2 direction)
     {
-        m_Rigidbody2D.AddForce(Vector2.Scale(direction,new Vector2(m_SwimingForce,m_SwimingForce)));
+        m_Rigidbody2D.AddForce(Vector2.Scale(direction, new Vector2(m_SwimingForce, m_SwimingForce)));
     }
 
 
@@ -396,7 +418,7 @@ public class CharacterController2D : MonoBehaviour
         if (!crouch)
         {
             // If the character has a ceiling preventing them from standing up, keep them crouching
-            Collider2D Col = Physics2D.OverlapCircle(m_CeilingCheck.position, k_CeilingRadius, m_WhatIsGround);
+            Collider2D Col = Physics2D.OverlapCircle(transform.position + (Vector3)m_CeilingCheck, k_CeilingRadius, m_WhatIsGround);
             if (Col && !Col.isTrigger)
             {
                 crouch = true;
