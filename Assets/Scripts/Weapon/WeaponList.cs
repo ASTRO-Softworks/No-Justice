@@ -8,10 +8,15 @@ public class WeaponList : MonoBehaviour {
     //public Transform scope;
 //    private int weaponIx;
     private Weapon curWeapon;
+    public int Count()
+    {
+        return weaponPull.Count;
+    }
 
 	// Use this for initialization
 	void Start () {
-        curWeapon = Instantiate(weaponPull[0], gameObject.transform);
+        if(Count() != 0)
+            curWeapon = Instantiate(weaponPull[0], gameObject.transform);
     }
 	
     public Weapon ChangeWeapon(int i)

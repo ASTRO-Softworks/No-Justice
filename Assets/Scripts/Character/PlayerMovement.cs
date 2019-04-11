@@ -106,6 +106,14 @@ public class PlayerMovement : AbstractCharacter
         {
             transform.Find("Aimer").gameObject.GetComponent<Scope>().Shoot();
         }
+        else if (Input.GetKeyDown(KeyCode.F1))
+        {
+            transform.Find("Aimer").gameObject.GetComponent<Scope>().ChangeWeapon(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.F2))
+        {
+            transform.Find("Aimer").gameObject.GetComponent<Scope>().ChangeWeapon(1);
+        }
         else if (Input.GetButtonDown("Interact0"))//Ladder
         {
             //Debug.Log("PM_Climb");
