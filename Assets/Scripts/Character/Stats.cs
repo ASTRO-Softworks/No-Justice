@@ -1,40 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Stats : MonoBehaviour {
 
-    public float health = 100f;
-    //private float maxHealth;
-    public float defence = 100f;
+    public int health = 100;
+    public int defence = 100;
 
-    void Start()
+    public void Damage (int damage)
     {
-        //maxHealth = health;
+        Debug.Log("HP " + health);
+        defence -= damage;
+        if (defence < 0)
+        {   
+            health += damage;
+            defence = 0;
+        }
+        if (health > 0) return;
+        Debug.Log("KILL "+gameObject.name);
+        Destroy(gameObject);
     }
-
-
-
-    void Update()
-    {
-        
-        /*
-        if (transform.position.y <= fallBoundary)
-            Damage (999999);
-        */
-    }
-
-    public void Damage (float damage)
-        {
-        Debug.Log("HP " + health.ToString());
-        health -= damage;
-        if (health <= 0)
-            {
-            Debug.Log("KILL "+gameObject.name);
-            Destroy(gameObject);
-            }
-	    }
-	
-	// Update is called once per frame
-	
 }
