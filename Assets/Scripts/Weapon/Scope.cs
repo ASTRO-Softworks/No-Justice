@@ -7,8 +7,14 @@ public class Scope : MonoBehaviour
 {
     private Vector3 aimPoint;
     public float distance = 5f;
-    WeaponList weaponList;
-    private Weapon weapon;
+//    weaponPull weaponPull;
+    [SerializeField] private List<Weapon> weaponPull;
+
+    private Weapon curWeapon;
+
+  //  private Weapon weapon;
+
+
 
     float timeToFire = 0.0f;
 
@@ -18,11 +24,17 @@ public class Scope : MonoBehaviour
     }
     void Start()
     {
-        weaponList = gameObject.GetComponent<WeaponList>();
-        if (weaponList.Count() != 0)
-        {
-            weapon = weaponList.GetWeapon();
+
+        //weaponPull = gameObject.GetComponent<weaponPull>();
+        if (weaponPull.Count != 0)
+        { 
+            curWeapon = Instantiate(weaponPull[0], gameObject.transform);
         }
+
+        /*if (weaponPull.Count() != 0)
+        {
+            weapon = weaponPull.GetWeapon();
+        }*/
         else
         {
             Debug.Log("" + gameObject.name + ": WHERE IS MY WEAPON LIST?!");
@@ -34,8 +46,8 @@ public class Scope : MonoBehaviour
 
     public void ChangeWeapon(int i)
     {
-        weaponList.ChangeWeapon(i);
-        weapon = weaponList.GetWeapon();
+        Destroy(curWeapon.gameObject);
+        curWeapon = Instantiate(weaponPull[i], gameObject.transform);
         timeToFire = Time.time;
     }
         
@@ -56,10 +68,10 @@ public class Scope : MonoBehaviour
     }
 
     public void Shoot () {
-        if (getTimeToFire() && (weaponList.Count() != 0))
+        if (getTimeToFire() && (weaponPull.Count != 0))
         {
-            weapon.Shoot();
-            timeToFire = Time.time + weapon.fireRate;
+            curWeapon.Shoot();
+            timeToFire = Time.time + curWeapon.fireRate;
         }
      
     }
