@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BFG : Weapon
 {
@@ -21,16 +18,12 @@ public class BFG : Weapon
         firePoint = transform.Find("FirePoint");
     }
 
-    override public void Shoot()
+    public override void Shoot()
     {
         float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
-        /*
-        Vector2 dir = new Vector2(rotConst * (float)Math.Cos(transform.parent.localRotation.z),
-                                    (float)Math.Sin(transform.parent.localRotation.z));
-                                    */
+        
         Vector2 dir = new Vector2(1, Mathf.Tan(transform.rotation.eulerAngles.z * Mathf.Deg2Rad) * rotConst) * rotConst;
         Vector2 speed = dir.normalized;
-        //Mathf.Tan(transform.rotation.eulerAngles.z * Mathf.Deg2Rad);
         
         RaycastHit2D hit  = Physics2D.Raycast(firePoint.position, dir, distance,whatToHit);
         if (hit)
@@ -39,12 +32,5 @@ public class BFG : Weapon
             Debug.DrawLine(firePoint.position, hit.point, Color.red);
         }
         Debug.DrawRay(firePoint.position, dir,Color.blue);
-
-        /*
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).
-            gameObject.GetComponent<Rigidbody2D>().velocity
-            = new Vector3(speed.x * bulletSpeed, speed.y * bulletSpeed, 0);
-         */
-
     }
 }

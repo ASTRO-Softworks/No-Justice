@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Weapon : MonoBehaviour {
     public float fireRate;
@@ -8,7 +6,7 @@ public class Weapon : MonoBehaviour {
     public float bulletSpeed;
     
 
-    virtual public void Shoot()
+    public virtual void Shoot()
     {
         Debug.Log("PEW PEW PEW!!!");
     }
