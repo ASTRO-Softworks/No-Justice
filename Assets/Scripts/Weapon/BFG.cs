@@ -11,8 +11,6 @@ public class BFG : Weapon
 
     void Start()
     {
-        distance = 10;
-
         //        fireRate = 1.5f;
         //        Damage = 10.0f;
         //        bulletSpeed = 1.0f;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity;
+using UnityEngine.Networking;
 
 public class Bullet : MonoBehaviour {
 
@@ -18,8 +19,11 @@ public class Bullet : MonoBehaviour {
     //rb.velocity = transform.right * speed;
     //}
     private bool cankill = true;
+    private Vector2 startPosition;
 
-    void Start() {
+    void Start()
+    {
+        startPosition = transform.position;
         Collider2D[] colliders = Physics2D.OverlapCircleAll((Vector2)transform.position, 0.1f);
 
         foreach (Collider2D collider in colliders)
@@ -41,6 +45,7 @@ public class Bullet : MonoBehaviour {
                 if (hitInfo.gameObject.CompareTag("Enemy") || hitInfo.gameObject.CompareTag("Player"))
                 {
                     hitInfo.gameObject.GetComponent<Stats>().Damage(1);
+                    hitInfo.gameObject.GetComponent<Stats>().SetMemory(startPosition);
                 }
             }
          }

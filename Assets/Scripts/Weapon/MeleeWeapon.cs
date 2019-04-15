@@ -26,6 +26,7 @@ public class MeleeWeapon : Weapon
                 if (obj.gameObject.CompareTag(transform.parent.parent.gameObject.GetComponent<Stats>().enemyTeam))
                 {
                     obj.gameObject.GetComponent<Stats>().Damage(Damage);
+                    obj.gameObject.GetComponent<Stats>().SetMemory(transform.position);
                     
                     break;
                 }

@@ -10,10 +10,6 @@ public class EnemyController : AbstractCharacter {
     int layerMask = 1 << 2;
     private float _seenDistanse = 10.0f;
     private Vector2 direction = new Vector2(0, 0);
-
-    //private string ourTeam = gameObject.GetComponent<Stats>().ourTeam;
-    //private string enemyTeam = gameObject.GetComponent<Stats>().enemyTeam;
-
     
     // Use this for initialization
     private void Start () {
@@ -31,6 +27,10 @@ public class EnemyController : AbstractCharacter {
    // public Transform Scope;// = GameObject.Find("Aimer");
     private int counterReverse=0;
     // Bit shift the index of the layer (8) to get a bit mask
+    public void setToMemory(Vector2 vector2)
+    {
+        _memory.setLastSeenPosition(vector2);
+    }
 
     public void Hack()
     {

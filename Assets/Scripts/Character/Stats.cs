@@ -18,9 +18,15 @@ public class Stats : MonoBehaviour {
         }
         Debug.Log("DEF " + defence);
         Debug.Log("HP " + health);
-
+        
         if (health > 0) return;
         Debug.Log("KILL "+gameObject.name);
         Destroy(gameObject);
+    }
+
+    public void SetMemory(Vector2 vector2)
+    {
+        if (transform.gameObject.CompareTag("Enemy"))
+            transform.gameObject.GetComponent<EnemyController>().setToMemory(vector2);
     }
 }
