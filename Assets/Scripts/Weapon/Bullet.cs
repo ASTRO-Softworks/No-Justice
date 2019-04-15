@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
     //public GameObject shooter;
     //bool b = false;
 
-
+    
 
     // Use this for initialization
     //  void Start () {
@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour {
 
                 if (hitInfo.gameObject.CompareTag("Enemy") || hitInfo.gameObject.CompareTag("Player"))
                 {
-                    hitInfo.gameObject.GetComponent<Stats>().Damage(26);
+                    hitInfo.gameObject.GetComponent<Stats>().Damage(1);
                 }
             }
          }

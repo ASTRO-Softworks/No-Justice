@@ -4,14 +4,15 @@ public class BFG : Weapon
 {
 
     private Transform firePoint;
-    public GameObject bulletPrefab;
+    //public GameObject bulletPrefab;
     public LayerMask whatToHit;
-    public GameObject pew;
-    public float distance = 10;
+    //public GameObject pew;
     //int layerMask = whatToHit;//~(1 << 2);
 
     void Start()
     {
+        distance = 10;
+
         //        fireRate = 1.5f;
         //        Damage = 10.0f;
         //        bulletSpeed = 1.0f;
