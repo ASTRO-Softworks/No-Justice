@@ -12,10 +12,6 @@ public class Scope : MonoBehaviour
 
     private Weapon curWeapon;
 
-  //  private Weapon weapon;
-
-
-
     float timeToFire = 0.0f;
 
     public void takeAim(Vector3 vec)
@@ -50,7 +46,12 @@ public class Scope : MonoBehaviour
         curWeapon = Instantiate(weaponPull[i], gameObject.transform);
         timeToFire = Time.time;
     }
-        
+
+    public Weapon GetCurWeapon()
+    {
+        return curWeapon;
+    }
+
     void Update()
     {
         if(aimPoint == Vector3.zero)aimPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);//transform.position + new Vector3(-1,0);//IF zero vector - aim at mouse

@@ -4,6 +4,8 @@ public class Stats : MonoBehaviour {
 
     public int health = 100;
     public int defence = 100;
+    public string ourTeam = "Player";
+    public string enemyTeam = "Enemy";
 
     public void Damage (int damage)
     {

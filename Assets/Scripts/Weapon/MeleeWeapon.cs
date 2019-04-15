@@ -2,13 +2,12 @@
 using UnityEngine;
 public class MeleeWeapon : Weapon
 {
-    private Transform firePoint;
+  //  private Transform firePoint;
 //    public GameObject bulletPrefab;
     public LayerMask whatToHit;
 //    public GameObject pew;
-    public float distance = 10;
     //int layerMask = whatToHit;//~(1 << 2);
-
+/*
     void Start()
     {
         //        fireRate = 1.5f;
@@ -16,16 +15,15 @@ public class MeleeWeapon : Weapon
         //        bulletSpeed = 1.0f;
         firePoint = transform.Find("FirePoint");
     }
-
+*/
     public override void Shoot()
     {
-        Debug.Log(transform.parent.parent);
         transform.parent.parent.GetComponent<Animator>().SetBool("isMeleeWeaponAttack", true);
-        Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, 1);
+        Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, distance);
         if (objects.Length > 0)
             foreach (Collider2D obj in objects)
             {
-                if (obj.gameObject.CompareTag("Enemy"))
+                if (obj.gameObject.CompareTag(transform.parent.parent.gameObject.GetComponent<Stats>().enemyTeam))
                 {
                     obj.gameObject.GetComponent<Stats>().Damage(Damage);
                     

@@ -11,11 +11,14 @@ public class EnemyController : AbstractCharacter {
     private float _seenDistanse = 10.0f;
     private Vector2 direction = new Vector2(0, 0);
 
-    private string ourTeam = "Enemy";
-    private string enemyTeam = "Player";
+    //private string ourTeam = gameObject.GetComponent<Stats>().ourTeam;
+    //private string enemyTeam = gameObject.GetComponent<Stats>().enemyTeam;
+
     
     // Use this for initialization
     private void Start () {
+        transform.gameObject.GetComponent<Stats>().ourTeam = "Enemy";
+        transform.gameObject.GetComponent<Stats>().enemyTeam = "Player";
         runSpeed = 0.3f;
         _memory.setVelocity(runSpeed);
         _memory.setStartLastSeenPosition(transform.position);
@@ -31,9 +34,9 @@ public class EnemyController : AbstractCharacter {
 
     public void Hack()
     {
-        string tmp = ourTeam;
-        ourTeam = enemyTeam;
-        enemyTeam = tmp;
+        string tmp = transform.gameObject.GetComponent<Stats>().ourTeam;
+        transform.gameObject.GetComponent<Stats>().ourTeam = transform.gameObject.GetComponent<Stats>().enemyTeam;
+        transform.gameObject.GetComponent<Stats>().enemyTeam = tmp;
     }
 
     public override void _Die()
@@ -66,7 +69,7 @@ public class EnemyController : AbstractCharacter {
             if (hit)
             {
                 //if it is a player
-                if (hit.collider.gameObject.CompareTag(enemyTeam))
+                if (hit.collider.gameObject.CompareTag(transform.gameObject.GetComponent<Stats>().enemyTeam))
                 {
                     //and it is in seen distanse
                     if (Math.Abs(hit.collider.gameObject.transform.position.x - transform.position.x) < _seenDistanse)
@@ -74,9 +77,15 @@ public class EnemyController : AbstractCharacter {
                         //save Player position to AI memory
                         _memory.setLastSeenPosition(hit.collider.gameObject.transform.position);
                         //set vector of shooting
-                        transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(hit.collider.gameObject.transform.position);
-                        //Shoot
-                        transform.Find("Aimer").gameObject.GetComponent<Scope>().Shoot();
+                        if (Math.Abs(hit.collider.gameObject.transform.position.x - transform.position.x) 
+                            < transform.Find("Aimer").gameObject.GetComponent<Scope>().GetCurWeapon().distance)
+                        {
+                            transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(hit.collider.gameObject.transform.position);
+                            //Shoot
+                            transform.Find("Aimer").gameObject.GetComponent<Scope>().Shoot();
+
+                        }
+                        
                     }
                 }
             }
@@ -110,7 +119,7 @@ public class EnemyController : AbstractCharacter {
         points = Physics2D.OverlapBoxAll(new Vector2(transform.position.x + direction.x * 2f, transform.position.y), new Vector2(0.1f,0.3f), 0.0f);
         foreach(Collider2D point in points)
         {
-            if(point.gameObject.CompareTag(ourTeam) || point.gameObject.CompareTag("Ground"))
+            if(point.gameObject.CompareTag(transform.gameObject.GetComponent<Stats>().ourTeam) || point.gameObject.CompareTag("Ground"))
             {
                 runSpeed = -runSpeed;
                 break;

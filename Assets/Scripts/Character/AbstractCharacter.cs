@@ -26,7 +26,6 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public delegate bool Condition(AbstractCharacter _);
 
-
     protected class C //Conditions handler
     {
         public static bool WantToFly(AbstractCharacter _) { return _.b_req_fly; }
