@@ -7,13 +7,16 @@ public class Stats : MonoBehaviour {
 
     public void Damage (int damage)
     {
-        Debug.Log("HP " + health);
         defence -= damage;
+        
         if (defence < 0)
         {   
-            health += damage;
+            health += defence;
             defence = 0;
         }
+        Debug.Log("DEF " + defence);
+        Debug.Log("HP " + health);
+
         if (health > 0) return;
         Debug.Log("KILL "+gameObject.name);
         Destroy(gameObject);

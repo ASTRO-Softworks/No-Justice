@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HackMashine : Skill
 {
-    
+    //TODO: Finish Hack Mashine
  //   public GameObject bulletPrefab;
     public LayerMask whatToHit;
  //   public GameObject pew;

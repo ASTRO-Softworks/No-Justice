@@ -2,7 +2,7 @@
 
 public class Weapon : MonoBehaviour {
     public float fireRate;
-    public float Damage;
+    public int Damage;
     public float bulletSpeed;
     
 

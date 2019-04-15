@@ -19,6 +19,19 @@ public class MeleeWeapon : Weapon
 
     public override void Shoot()
     {
+        Debug.Log(transform.parent.parent);
+        transform.parent.parent.GetComponent<Animator>().SetBool("isMeleeWeaponAttack", true);
+        Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, 1);
+        if (objects.Length > 0)
+            foreach (Collider2D obj in objects)
+            {
+                if (obj.gameObject.CompareTag("Enemy"))
+                {
+                    obj.gameObject.GetComponent<Stats>().Damage(Damage);
+                    
+                    break;
+                }
+            }
         /*
         float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
         
