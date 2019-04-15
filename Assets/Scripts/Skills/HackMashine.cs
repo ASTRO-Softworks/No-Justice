@@ -23,6 +23,15 @@ public class HackMashine : Skill
                         target = obj.gameObject;
                 }
         }
+
+        if (target == null)
+        {
+            Debug.Log("Nobody found");
+        }
+        else
+        {
+                Debug.Log("Target is: " + target.transform.position);
+        }
    /*     float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
         
         Vector2 dir = new Vector2(1, Mathf.Tan(transform.rotation.eulerAngles.z * Mathf.Deg2Rad) * rotConst) * rotConst;
