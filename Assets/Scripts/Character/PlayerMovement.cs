@@ -106,6 +106,10 @@ public class PlayerMovement : AbstractCharacter
         {
             transform.Find("Aimer").gameObject.GetComponent<Scope>().Shoot();
         }
+        else if (Input.GetButtonDown("useSkill"))
+        {
+            transform.Find("Aimer").gameObject.GetComponent<Scope>().Active();
+        }
         else if (Input.GetKeyDown(KeyCode.F1))
         {
             transform.Find("Aimer").gameObject.GetComponent<Scope>().ChangeWeapon(0);

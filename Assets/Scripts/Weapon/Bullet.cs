@@ -36,19 +36,12 @@ public class Bullet : MonoBehaviour {
     }
     void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        if (!hitInfo.isTrigger)//hitInfo.gameObject.CompareTag("Enemy") || hitInfo.gameObject.CompareTag("Player"))
-        {
-            if (cankill)
-            {
-                Destroy(gameObject);
-
-                if (hitInfo.gameObject.CompareTag("Enemy") || hitInfo.gameObject.CompareTag("Player"))
-                {
-                    hitInfo.gameObject.GetComponent<Stats>().Damage(1);
-                    hitInfo.gameObject.GetComponent<Stats>().SetMemory(startPosition);
-                }
-            }
-         }
+        if (hitInfo.isTrigger) return;
+        if (!cankill) return;
+        Destroy(gameObject);
+        if (!hitInfo.gameObject.CompareTag("Enemy") && !hitInfo.gameObject.CompareTag("Player")) return;
+        hitInfo.gameObject.GetComponent<Stats>().Damage(1);
+        hitInfo.gameObject.GetComponent<Stats>().SetMemory(startPosition);
     }
 
     void OnTriggerExit2D(Collider2D colider)
@@ -60,7 +53,6 @@ public class Bullet : MonoBehaviour {
             if (colider.CompareTag("MainCamera"))
         {
             Destroy(gameObject);
-            //~Bullet();
         }
 
     }

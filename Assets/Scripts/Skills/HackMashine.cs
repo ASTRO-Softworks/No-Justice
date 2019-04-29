@@ -1,36 +1,45 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HackMashine : Skill
 {
-    //TODO: Finish Hack Mashine
  //   public GameObject bulletPrefab;
     public LayerMask whatToHit;
  //   public GameObject pew;
-    public float distance = 10;
+    public float distance;
     private GameObject target = null;
     //int layerMask = whatToHit;//~(1 << 2);
-
+    private int count = 0;
     public override void Active()
     {
+        target = null;
         for (int i = 0; i < distance; i++)
         {
             Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, i);
             if (objects.Length > 0)
                 foreach (Collider2D obj in objects)
                 {
+                    Debug.Log(obj.tag + "  " + obj.gameObject);
                     if (obj.gameObject.CompareTag("Enemy"))
-                        target = obj.gameObject;
+                        target = (obj.gameObject);
                 }
         }
 
+  /*      if (targets != null)
+        {
+            target = targets[count++ % targets.Count];
+            count = count % 100;
+        }
+*/
         if (target == null)
         {
             Debug.Log("Nobody found");
         }
         else
         {
-                Debug.Log("Target is: " + target.transform.position);
+            target.GetComponent<EnemyController>().Hack();
+            Debug.Log("Target is: " + target.transform.position);
         }
    /*     float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
         

@@ -9,10 +9,13 @@ public class Scope : MonoBehaviour
     public float distance = 5f;
 //    weaponPull weaponPull;
     [SerializeField] private List<Weapon> weaponPull;
+    [SerializeField] private List<Skill> skillPull;
 
     private Weapon curWeapon;
+    private Skill curSkill;
 
     float timeToFire = 0.0f;
+    float timeToSkill = 0.0f;
 
     public void takeAim(Vector3 vec)
     {
@@ -25,16 +28,18 @@ public class Scope : MonoBehaviour
         if (weaponPull.Count != 0)
         { 
             curWeapon = Instantiate(weaponPull[0], gameObject.transform);
+        }else
+        {
+            Debug.Log("" + gameObject.name + ": WHERE IS MY WEAPON LIST?!");   
         }
 
-        /*if (weaponPull.Count() != 0)
+
+        if (skillPull.Count != 0)
+        { 
+            curSkill = skillPull[0];
+        }else
         {
-            weapon = weaponPull.GetWeapon();
-        }*/
-        else
-        {
-            Debug.Log("" + gameObject.name + ": WHERE IS MY WEAPON LIST?!");
-            
+            Debug.Log("" + gameObject.name + ": WHERE IS MY Skill LIST?!");   
         }
         
 
@@ -46,10 +51,21 @@ public class Scope : MonoBehaviour
         curWeapon = Instantiate(weaponPull[i], gameObject.transform);
         timeToFire = Time.time;
     }
+    public void ChangeSkill(int i)
+    {
+        //Destroy(curWeapon.gameObject);
+        //curWeapon = Instantiate(weaponPull[i], gameObject.transform);
+        curSkill = skillPull[i];
+        timeToSkill = Time.time;
+    }
 
     public Weapon GetCurWeapon()
     {
         return curWeapon;
+    }
+    public Skill GetCurSkill()
+    {
+        return curSkill;
     }
 
     void Update()
@@ -67,12 +83,24 @@ public class Scope : MonoBehaviour
     {
         return  Time.time > timeToFire;
     }
+    public bool getTimeToSkill()
+    {
+        return  Time.time > timeToSkill;
+    }
 
     public void Shoot () {
         if (getTimeToFire() && (weaponPull.Count != 0))
         {
             curWeapon.Shoot();
             timeToFire = Time.time + curWeapon.fireRate;
+        }
+     
+    }
+    public void Active() {
+        if (getTimeToSkill() && (skillPull.Count != 0))
+        {
+            curSkill.Active();
+            timeToSkill = Time.time + curSkill.skillRate;
         }
      
     }
