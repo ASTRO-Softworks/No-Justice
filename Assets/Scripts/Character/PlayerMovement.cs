@@ -13,7 +13,8 @@ public class PlayerMovement : AbstractCharacter
     
     public float climbSpeed = 20f;
     public float diveSpeed = 100;
-
+    Interactive interact_obj;
+    bool interact = false;
     float horizontalMove = 0f;
     float verticalMove = 0f;
     //float mouseX = 0f;
@@ -43,7 +44,7 @@ public class PlayerMovement : AbstractCharacter
     // Update is called once per frame
     void Update()
     {//Get controll from keyboard
-        horizontalMove = Input.GetAxisRaw("Horizontal") * runSpeed;
+        horizontalMove = Input.GetAxisRaw("Horizontal");
 
         verticalMove = Input.GetAxisRaw("Vertical");
 
@@ -94,10 +95,20 @@ public class PlayerMovement : AbstractCharacter
             invisible = !invisible;
             if (invisible)
             {
+                Collider2D[] colls = GetComponents<Collider2D>();
+                foreach(Collider2D col in colls)
+                {
+                    col.isTrigger = true;
+                }
                 GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, .5f);
             }
             else
             {
+                Collider2D[] colls = GetComponents<Collider2D>();
+                foreach (Collider2D col in colls)
+                {
+                    col.isTrigger = false;
+                }
                 GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
             }
 
@@ -124,8 +135,13 @@ public class PlayerMovement : AbstractCharacter
         }
         else if (Input.GetButtonDown("Interact0"))//Ladder
         {
+            if(C.NearLadder(this)) Climb();
+            else if(interact)
+            {
+                interact_obj.Interact();
+            }
             //Debug.Log("PM_Climb");
-            Climb();
+
             //animator.SetBool("IsCrouching", false);
         }
 
@@ -139,7 +155,24 @@ public class PlayerMovement : AbstractCharacter
         //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
     }
 
+    public override void _OnTriggerEnter2D(Collider2D collider)
+    {
+        
+        if (collider.CompareTag("Interactive"))
+        {
+            interact_obj = collider.gameObject.GetComponent<Interactive>();
+            if(interact_obj) interact = true;
+            else interact = false;
+        }
+    }
 
+    public override void _OnTriggerExit2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Interactive"))
+        {
+            interact = false;
+        }
+    }
 
     public void OnLanding()
     {

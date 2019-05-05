@@ -11,10 +11,12 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Animator animator;
     [SerializeField] private bool b_Crouch_strobe = false;
     [SerializeField] private bool b_Fly_strobe = false;
+    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 
     //Enviroment
     int i_water_counter = 0;
     int i_ladder_counter = 0;
+    bool b_under_ceiling = false;
     //bool b_near_ladder = false;
 
     //Requests(keys)	
@@ -34,12 +36,9 @@ public abstract class AbstractCharacter : MonoBehaviour
         public static bool AllInWater(AbstractCharacter _) { return _.i_water_counter >= 2; }
         public static bool HalfInWater(AbstractCharacter _) { return _.i_water_counter == 1; }
         public static bool InWater(AbstractCharacter _) { return _.i_water_counter > 0; }
-        public static bool NearLadder(AbstractCharacter _)
-        {
-            return _.i_ladder_counter > 0;
-        }
+        public static bool NearLadder(AbstractCharacter _) { return _.i_ladder_counter > 0; }
+        public static bool UnderCeiling(AbstractCharacter _) { return _.b_under_ceiling; }
     }
-
     public float runSpeed;
 
 
@@ -48,12 +47,12 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     Condition[,] TransTable = new Condition[(int)S.LEN, (int)S.LEN]
 
-        {           //Walk                                                  //Crouch                                                    //Climb                                                 //Swim                                                                      //Fly
-        /*Walk*/    {(_)=>{return false; },                                 (_)=>{return C.WantToCrouch(_); },                          (_)=>{return C.Interacting(_) && C.NearLadder(_); },    (_)=>{return C.AllInWater(_); },                                            (_)=>{return C.WantToFly(_); }},    //Walk
-        /*Crouch*/  {(_)=>{return !C.WantToCrouch(_); },                    (_)=>{return false; },                                      (_)=>{return C.Interacting(_) && C.NearLadder(_); },    (_)=>{return C.InWater(_); },                                               (_)=>{return C.WantToFly(_); }},    //Crouch
-        /*Climb*/   {(_)=>{return C.Interacting(_) || !C.NearLadder(_); },  (_)=>{return false; },                                      (_)=>{return false; },                                  (_)=>{return C.AllInWater(_) && (C.Interacting(_) || !C.NearLadder(_)); },  (_)=>{return C.WantToFly(_); }},    //Climb
-        /*Swim*/    {(_)=>{return !C.AllInWater(_); },                      (_)=>{return !C.InWater(_) && C.WantToCrouch(_); },         (_)=>{return C.Interacting(_) && C.NearLadder(_); },    (_)=>{return false; },                                                      (_)=>{return C.WantToFly(_); }},    //Swim
-        /*Fly*/     {(_)=>{return !C.WantToFly(_); },                       (_)=>{return !C.WantToFly(_) && C.WantToCrouch(_); },       (_)=>{return C.Interacting(_) && C.NearLadder(_); },    (_)=>{return !C.WantToFly(_) && C.AllInWater(_); },                         (_)=>{return false; }}              //Fly
+        {           //Walk                                                      //Crouch                                                    //Climb                                                                          //Swim                                                                      //Fly
+        /*Walk*/    {(_)=>{return false; },                                     (_)=>{return C.WantToCrouch(_); },                          (_)=>{return C.Interacting(_) && C.NearLadder(_); },                            (_)=>{return C.AllInWater(_); },                                            (_)=>{return C.WantToFly(_); }},    //Walk
+        /*Crouch*/  {(_)=>{return !C.WantToCrouch(_) && !C.UnderCeiling(_); },  (_)=>{return false; },                                      (_)=>{return C.Interacting(_) && C.NearLadder(_) && !C.UnderCeiling(_); },      (_)=>{return C.InWater(_); },                                               (_)=>{return C.WantToFly(_); }},    //Crouch
+        /*Climb*/   {(_)=>{return C.Interacting(_) || !C.NearLadder(_); },      (_)=>{return false; },                                      (_)=>{return false; },                                                          (_)=>{return C.AllInWater(_) && (C.Interacting(_) || !C.NearLadder(_)); },  (_)=>{return C.WantToFly(_); }},    //Climb
+        /*Swim*/    {(_)=>{return !C.AllInWater(_); },                          (_)=>{return !C.InWater(_) && C.WantToCrouch(_); },         (_)=>{return C.Interacting(_) && C.NearLadder(_); },                            (_)=>{return false; },                                                      (_)=>{return C.WantToFly(_); }},    //Swim
+        /*Fly*/     {(_)=>{return !C.WantToFly(_); },                           (_)=>{return !C.WantToFly(_) && C.WantToCrouch(_); },       (_)=>{return C.Interacting(_) && C.NearLadder(_); },                            (_)=>{return !C.WantToFly(_) && C.AllInWater(_); },                         (_)=>{return false; }}              //Fly
         };
 
 
@@ -67,6 +66,28 @@ public abstract class AbstractCharacter : MonoBehaviour
     void FixedUpdate()
     {
         _FixedUpdate();
+
+        //bool wasGrounded = m_Grounded;
+        //m_Grounded = false;
+        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
+        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
+        //Collider2D[] Gcolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3)m_GroundCheck, k_GroundedRadius, m_WhatIsGround);
+        b_under_ceiling = false;
+        Collider2D[] Ccolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3)controller.CeilingCheck, k_GroundedRadius, controller.WhatIsGround);
+        
+
+        //If he hit celling accelerating downwards(2nd part of jump)
+        foreach (Collider2D collider in Ccolliders)
+        {
+            if (collider.gameObject != gameObject && !collider.isTrigger)
+            {
+                b_under_ceiling = true;
+                //controller.JumpCycle = controller.JumpDuration / 2;
+            }
+        }
+
+
+
         for (int i = 0; i < (int)S.LEN; i++)
         {
             if (TransTable[(int)controller.Condition, i](this))
@@ -89,8 +110,12 @@ public abstract class AbstractCharacter : MonoBehaviour
         _Die();
     }
 
+    public virtual void _OnTriggerEnter2D(Collider2D collider) { }
+    public virtual void _OnTriggerExit2D(Collider2D collider) { }
+
     void OnTriggerEnter2D(Collider2D collider)
     {
+        _OnTriggerEnter2D(collider);
         if (collider.CompareTag("Water"))
         {
             i_water_counter += 1;
@@ -103,6 +128,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
     void OnTriggerExit2D(Collider2D collider)
     {
+        _OnTriggerExit2D(collider);
         if (collider.CompareTag("Water"))
         {
             i_water_counter -= 1;
