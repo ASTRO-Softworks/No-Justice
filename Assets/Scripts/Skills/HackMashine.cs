@@ -38,8 +38,9 @@ public class HackMashine : Skill
         }
         else
         {
+            
             target.GetComponent<EnemyController>().Hack();
-            Debug.Log("Target is: " + target.transform.position);
+            Debug.Log("Target is: " + target + "  " + target.transform.position);
         }
    /*     float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1) * 2) + 1) * -1);
         
