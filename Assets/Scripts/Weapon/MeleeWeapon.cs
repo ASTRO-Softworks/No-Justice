@@ -9,10 +9,10 @@ public class MeleeWeapon : Weapon
         if (objects.Length > 0)
             foreach (Collider2D obj in objects)
             {
-                if (obj.gameObject.CompareTag(transform.parent.parent.gameObject.GetComponent<Stats>().enemyTeam))
+                if (obj.gameObject.CompareTag(transform.parent.parent.gameObject.GetComponent<Character.Stats>().enemyTeam))
                 {
-                    obj.gameObject.GetComponent<Stats>().Damage(Damage);
-                    obj.gameObject.GetComponent<Stats>().SetMemory(transform.position);
+                    obj.gameObject.GetComponent<Character.Stats>().Damage(Damage);
+                    obj.gameObject.GetComponent<Character.Stats>().SetMemory(transform.position);
                     
                     break;
                 }

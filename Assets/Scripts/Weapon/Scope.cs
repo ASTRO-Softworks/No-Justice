@@ -1,7 +1,17 @@
-﻿using System.Collections;
+﻿/*
+ * Developer:    Anton Larin && Sergeev Sergey
+ * Contact:      https://vk.com/sergeev_1999
+ * Version:      2.3.?
+ * Date:         ??.0?.18
+ * Last Update:  13.05.19
+ * class for Players hand, weapon and smth
+ */
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+
 
 public class Scope : MonoBehaviour
 {
@@ -83,6 +93,12 @@ public class Scope : MonoBehaviour
     {
         return  Time.time > timeToFire;
     }
+
+    public void SetTimeToFire(float waitTime)
+    {
+        timeToFire = Time.time + waitTime;
+    }
+
     public bool getTimeToSkill()
     {
         return  Time.time > timeToSkill;

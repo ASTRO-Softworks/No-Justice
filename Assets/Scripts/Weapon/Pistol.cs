@@ -28,9 +28,12 @@ public class Pistol : Weapon {
         */
         Vector2 dir = new Vector2(1, Mathf.Tan(transform.rotation.eulerAngles.z * Mathf.Deg2Rad) * rotConst) * rotConst;
         Vector2 speed = dir.normalized;
+        
+        GameObject bull = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            //.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector3(speed.x * bulletSpeed, speed.y * bulletSpeed, 0);
 
-        Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).
-            gameObject.GetComponent<Rigidbody2D>().velocity 
-            = new Vector3(speed.x * bulletSpeed, speed.y * bulletSpeed, 0);
+            bull.GetComponent<Bullet>().startTeg = gameObject.transform.parent.transform.parent.tag;
+            bull.GetComponent<Rigidbody2D>().velocity = new Vector3(speed.x * bulletSpeed, speed.y * bulletSpeed, 0);
+
     }
 }

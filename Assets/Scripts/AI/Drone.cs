@@ -1,15 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using UnityEngine.Serialization;
 
 namespace AI
 {
-    public class EnemyController : AbstractCharacter
+    public class Drone : AbstractCharacter
     {
         private readonly Memory _memory = new Memory();
         [FormerlySerializedAs("SpawnPoint")] public Vector3 spawnPoint;
         int _layerMask = 1 << 2;
-        [SerializeField]private float _seenDistanse = 10.0f;
+        private float _seenDistanse = 10.0f;
         private Vector2 _direction = new Vector2(0, 0);
 
         // Use this for initialization
@@ -18,10 +18,13 @@ namespace AI
             transform.gameObject.GetComponent<Character.Stats>().ourTeam = "Enemy";
             transform.gameObject.GetComponent<Character.Stats>().enemyTeam = "Player";
             runSpeed = 0.3f;
+            runSpeed_Y = runSpeed;
             _memory.setVelocity(runSpeed);
+            _memory.setVelocityY(runSpeed_Y);
             _memory.setStartLastSeenPosition(transform.position);
 // This would cast rays only against colliders in layer 8, so we just inverse the mask.
             _layerMask = ~_layerMask;
+            Fly();
         }
 
         // Update is called once per frame
@@ -50,40 +53,37 @@ namespace AI
 
         private bool _walking;
 
-        private void OnCollisionStay2D(Collision2D other)
-        {
-            if (other.gameObject.CompareTag("Ground"))
-            {
-                var position = transform.position;
-                Collider2D[] points = Physics2D.OverlapBoxAll(
-                    new Vector2(position.x,
-                        position.y - gameObject.GetComponent<BoxCollider2D>().size.y),
-                    new Vector2(0.03f, 0.2f), 0.0f);
-                foreach (var variable in points)
-                {
-                    if (variable.CompareTag("Ground"))
-                    {
-                        _walking = true;
-                    }
-                }
-            }
-        }
+        private float runSpeed_Y;
 
         protected override void _FixedUpdate()
         {
             
-            Walk();
-
+            //Fly();
             //if we seen player somewhere, 
             //but we far from this place and go to other side =>
             // => go to another side
             if (_memory.isSeen)
-                if (_memory.getDiference(transform.position) > _seenDistanse * 1.2f &&
-                    (_memory.getXDir(transform.position) * runSpeed < 0))
-                  
-                    runSpeed = -runSpeed; 
-            
+            {
+                if (_memory.getDiference(transform.position) > _seenDistanse * 0.32f)
+                {
+                    if (_memory.getXDir(transform.position) * runSpeed < 0)
+//                        runSpeed = _memory.changeMoveDirection(transform.position).x;
+                        runSpeed = -runSpeed;
+
+                    if (_memory.getYDir(transform.position) * runSpeed_Y < 0){
+                        //runSpeed_Y = _memory.changeMoveDirection(transform.position).y;
+                        runSpeed_Y = -_memory.getVelocityY();
+
+                    _memory.setVelocityY(runSpeed_Y);
+                }
+            }
+                else if (_memory.getDiference(transform.position) < _seenDistanse * 0.2f)
+                {
+                    runSpeed_Y = 0;
+                }
+            }
             //Смотрим туда, куда идем    
+            if (runSpeed != 0)
                 _direction = new Vector2(runSpeed, 0);
             //Стрельба
             for (int i = -30; i < 30; i ++)
@@ -95,14 +95,14 @@ namespace AI
                 var position = transform.position;
                 hit = Physics2D.Raycast(new Vector2(position.x + 0.5f * _direction.x / Math.Abs(_direction.x),
                         position.y - 0.5f)
-                    , new Vector2(_direction.x * 30, i), _seenDistanse, _layerMask);
+                    , new Vector2(_direction.x * 10, i), _seenDistanse, _layerMask);
                 //if Enemy can see an object
                 if (hit)
                 {
                     //if it is a player
                     if (hit.collider.gameObject.CompareTag(transform.gameObject.GetComponent<Character.Stats>().enemyTeam))
                     {
-                        //and it is in seen distance
+                        //and it is in seen distanse
                         if (Math.Abs(hit.collider.gameObject.transform.position.x - transform.position.x) <
                             _seenDistanse)
                         {
@@ -118,63 +118,38 @@ namespace AI
                                 transform.Find("Aimer").gameObject.GetComponent<Scope>().Shoot();
                             }
                         }
+
                     }
                     else if (i == 0)
                     {
-                        // Debug.Log(hit.collider.tag);
                         if (
-                            hit.distance <= gameObject.GetComponent<BoxCollider2D>().size.x / 5
+                            hit.distance <= gameObject.GetComponent<BoxCollider2D>().size.x / 2
                             &&
                             (
-                                hit.collider.gameObject.CompareTag(transform.gameObject.GetComponent<Character.Stats>()
-                                    .ourTeam)
+                                hit.collider.gameObject.CompareTag(transform.gameObject.GetComponent<Character.Stats>().ourTeam)
                                 ||
                                 hit.collider.gameObject.CompareTag("Ground")
                             )
                         )
-                        
                             runSpeed = -runSpeed;
-                            
-                        
-                }
-                    else if (i == -20)
-                    {
-                        if (
-                            hit.distance >= gameObject.GetComponent<BoxCollider2D>().size.x / 2
-                            ||
-                            !hit.collider.gameObject.CompareTag("Ground")
-                           )
-
-                
-                            runSpeed = -runSpeed; 
-                        
-                            
                     }
                 }
-                else
-                {
-                    if (i == -30)
-                            runSpeed = -runSpeed; 
-                }
+              
             }
 
-            /*
-            if (Math.Abs(_memory.getDiference(transform.position)) >= _seenDistanse)
-            {
-                if (runSpeed * _memory.getXDir(transform.position) <= 0)
-                    if (!swaped)
-                    {runSpeed = -runSpeed; swaped = true;}
-            }*/
             
-            _direction = new Vector2(runSpeed, 0);
-
-            if (_walking)
+            if (!_memory.isSeen)            
+                runSpeed_Y = (float) Math.Sin( Time.time) * _memory.getVelocityY()* _memory.getVelocityY();
+            else
             {
-                if (transform.Find("Aimer").gameObject.GetComponent<Scope>().getTimeToFire())
-                    controller.Move(new Vector2(runSpeed, 0), _direction);
+                
+                _memory.Forget();
             }
 
-            _walking = false;
+            Debug.Log(runSpeed_Y + "    " + _memory.getVelocityY());
+            if (transform.Find("Aimer").gameObject.GetComponent<Scope>().getTimeToFire())
+                    controller.Move(new Vector2(runSpeed, runSpeed_Y), _direction);
+           
         }
     }
 }

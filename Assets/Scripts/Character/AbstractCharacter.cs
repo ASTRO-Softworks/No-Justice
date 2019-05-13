@@ -9,8 +9,10 @@ public abstract class AbstractCharacter : MonoBehaviour
 {
     public CharacterController2D controller;
     public Animator animator;
-    [SerializeField] private bool b_Crouch_strobe = false;
-    [SerializeField] private bool b_Fly_strobe = false;
+    //[SerializeField] 
+    private bool b_Crouch_strobe = false;
+    //[SerializeField] 
+    private bool b_Fly_strobe = false;
 
     //Enviroment
     int i_water_counter = 0;
@@ -57,10 +59,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         };
 
 
-    void Start()
-    {
-        //  Scope.gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
-    }
+ 
 
 
     protected abstract void _FixedUpdate();
