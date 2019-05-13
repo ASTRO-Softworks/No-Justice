@@ -155,7 +155,7 @@ public class PlayerMovement : AbstractCharacter
         //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
     }
 
-    public override void _OnTriggerEnter2D(Collider2D collider)
+    public void _OnTriggerEnter2D(Collider2D collider)
     {
         
         if (collider.CompareTag("Interactive"))
@@ -166,7 +166,7 @@ public class PlayerMovement : AbstractCharacter
         }
     }
 
-    public override void _OnTriggerExit2D(Collider2D collider)
+    public void _OnTriggerExit2D(Collider2D collider)
     {
         if (collider.CompareTag("Interactive"))
         {
