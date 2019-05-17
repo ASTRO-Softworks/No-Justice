@@ -43,7 +43,8 @@ public class PlayerMovement : AbstractCharacter
 
     // Update is called once per frame
     void Update()
-    {//Get controll from keyboard
+    {
+        //---------------------------------------------------------------Get controll from keyboard
         horizontalMove = Input.GetAxisRaw("Horizontal");
 
         verticalMove = Input.GetAxisRaw("Vertical");
@@ -51,14 +52,12 @@ public class PlayerMovement : AbstractCharacter
         //mouseX = Input.GetAxisRaw("Mouse X");
 
         //Scope.gameObject.GetComponent<Scope>().takeAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        //---------------------------------------------------------------Get aimer
         transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
-        animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
+        //animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         if (Input.GetButtonDown("Jump"))
         {
-            //      jump = true;
-            //    onladder = false;
-            //Debug.Log("NOT ON LADDER!!!");
             Jump();
         }
 
@@ -162,7 +161,7 @@ public class PlayerMovement : AbstractCharacter
         {
             interact_obj = collider.gameObject.GetComponent<Interactive>();
             if(interact_obj) interact = true;
-            else interact = false;
+            //else interact = false;
         }
     }
 

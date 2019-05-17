@@ -5,29 +5,29 @@ using UnityEngine.Events;
 
 public class CharacterController2D : MonoBehaviour
 {
-    [SerializeField] private float m_JumpForce = 25f;                           // Does nothing
-    [SerializeField] private float m_JumpHieght = 25f;                          // Top jump speed
-    [SerializeField] private float m_JumpDuration = 0.5f;                       // Jump duration
-    [SerializeField] private float m_FlyingSpeed = 800f;                        // Flying speed multiplier
-    [SerializeField] private float m_WalkingSpeed = 800f;                       // Walking speed multiplier
-    [SerializeField] private float m_ClimbingSpeed = 300f;                      // Climbing speed multiplier
-    [SerializeField] private float m_SwimingForce = 600f;                       // Swimming force multiplier
-    [SerializeField] private float m_CrouchSpeed = 300;                         // Crouching speed multiplier
-    [SerializeField] private float m_GravityScale = 1f;                         // Default non-zero gravity
-    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;  // How much to smooth out the movement
-    [SerializeField] private bool m_AirControl = false;                         // Whether or not a player can steer while jumping;
-    [SerializeField] private LayerMask m_WhatIsGround;                          // A mask determining what is ground to the character
-    private Vector2 m_GroundCheck;                           // A position marking where to check if the player is grounded.
-    private Vector2 m_CeilingCheck;                          // A position marking where to check for ceilings
-    [SerializeField] private Collider2D m_CrouchDisableCollider;                // A collider that will be disabled when crouching
-    private Rigidbody2D m_Rigidbody2D;                                          // Rigidbody attached to cheracter
-    const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
-    [SerializeField] private bool m_Grounded;            // Whether or not the player is grounded.
-    private bool m_wasClimbing;
-    const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
-    private bool m_FacingRight = true;  // For determining which way the player is currently facing.
-    private bool m_wasFacingRight = true; // Where player was facing before climbing
-    private float m_JumpCycle = 0;
+    
+    [SerializeField] public float m_JumpForce = 1000f;                               // Force applied upwards when jumping
+    //[SerializeField] private float m_JumpHieght = 25f;                           // Top jump speed
+    //[SerializeField] private float m_JumpDuration = 0.5f;                        // Jump duration
+    [SerializeField] public float m_FlyingSpeed = 50f;                            // Flying speed multiplier
+    [SerializeField] public float m_WalkingSpeed = 20f;                           // Walking speed multiplier
+    [SerializeField] public float m_ClimbingSpeed = 20f;                          // Climbing speed multiplier
+    [SerializeField] public float m_SwimingForce = 600f;                           // Swimming force multiplier
+    [SerializeField] public float m_CrouchSpeed = 10;                             // Crouching speed multiplier
+    [SerializeField] public float m_GravityScale = 6f;                             // Default non-zero gravity
+    [Range(0, .3f)] [SerializeField] private float m_MovementSmoothing = .05f;     // How much to smooth out the movement
+    //[SerializeField] private bool m_AirControl = false;                          // Whether or not a player can steer while jumping;
+    [SerializeField] private LayerMask m_WhatIsGround;                             // A mask determining what is ground to the character
+    private Vector2 m_GroundCheck;                                                 // A position marking where to check if the player is grounded.
+    private Vector2 m_CeilingCheck;                                                // A position marking where to check for ceilings
+    [SerializeField] private Collider2D m_CrouchDisableCollider;                   // A collider that will be disabled when crouching
+    private Rigidbody2D m_Rigidbody2D;                                             // Rigidbody attached to cheracter
+    const float k_GroundedRadius = .2f;                                            // Radius of the overlap circle to determine if grounded
+    [SerializeField] private bool m_Grounded;                                      // Whether or not the player is grounded.
+    const float k_CeilingRadius = .2f;                                             // Radius of the overlap circle to determine if the player can stand up
+    private bool m_FacingRight = true;                                             // For determining which way the player is currently facing.
+
+    //private float m_JumpCycle = 0;
 
     private Vector2 m_Velocity = Vector2.zero;
     public enum State
@@ -77,26 +77,7 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public float JumpCycle
-    {
-        get
-        {
-            return m_JumpCycle;
-        }
-
-        set
-        {
-            m_JumpCycle = value;
-        }
-    }
-
-    public float JumpDuration
-    {
-        get
-        {
-            return m_JumpDuration;
-        }
-    }
+   
 
     public LayerMask WhatIsGround
     {
@@ -108,8 +89,6 @@ public class CharacterController2D : MonoBehaviour
 
     private void Awake()
     {
-
-
         if (OnLandEvent == null)
             OnLandEvent = new UnityEvent();
 
@@ -122,7 +101,7 @@ public class CharacterController2D : MonoBehaviour
         m_GroundCheck = new Vector2(0 , - transform.localScale.y * (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
         m_CeilingCheck = new Vector2(0 , transform.localScale.y * (transform.GetComponent<BoxCollider2D>().size.y + transform.GetComponent<CircleCollider2D>().radius * 2) / 2);
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        Toggle_Walk();
+        //Toggle_Walk();
     }
 
     private void FixedUpdate()
@@ -130,10 +109,7 @@ public class CharacterController2D : MonoBehaviour
         //Update Grounded
         bool wasGrounded = m_Grounded;
         m_Grounded = false;
-        // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-        // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         Collider2D[] Gcolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3) m_GroundCheck, k_GroundedRadius, m_WhatIsGround);
-        Collider2D[] Ccolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3) m_CeilingCheck, k_GroundedRadius, m_WhatIsGround);
 
         foreach (Collider2D collider in Gcolliders)
         {
@@ -143,17 +119,6 @@ public class CharacterController2D : MonoBehaviour
                 if (!wasGrounded)
                     OnLandEvent.Invoke();
             }
-        }
-
-        //Jump update
-
-        
-
-
-        if (m_JumpCycle > 0)
-        {
-            m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, new Vector2(m_Rigidbody2D.velocity.x, m_JumpHieght * (m_JumpCycle - m_JumpDuration / 2)), ref m_Velocity, 0.01f);
-            m_JumpCycle -= Time.fixedDeltaTime;
         }
     }
     public void Move(Vector2 moveDirection, Vector2 lookDirection)
@@ -171,8 +136,6 @@ public class CharacterController2D : MonoBehaviour
             case State.Climb: _Logic_Climb(moveDirection); break;
             case State.Swim: _Logic_Swim(moveDirection); break;
         }
-
-
     }
 
     public void Jump()
@@ -182,9 +145,6 @@ public class CharacterController2D : MonoBehaviour
             // Add a vertical force to the player.
             m_Grounded = false;
             m_Rigidbody2D.AddForce(Vector2.up * m_JumpForce);
-            //gameObject.
-            //m_JumpCycle = m_JumpDuration;
-            
         }
 
     }
@@ -272,7 +232,6 @@ public class CharacterController2D : MonoBehaviour
     public void Toggle_Climb()
     {
         _Mechanics_Destruct_Manager();
-        m_JumpCycle = 0f;
         condition = State.Climb;
     }
     private void _Logic_Climb(Vector2 direction)
@@ -298,6 +257,7 @@ public class CharacterController2D : MonoBehaviour
         // Switch the way the player is labelled as facing.
         m_FacingRight = !m_FacingRight;
         // Multiply the player's x local scale by -1.
+        //transform.localScale.Scale(new Vector3(-1,0,0));
         transform.Rotate(0f, 180f, 0f);
     }
 }

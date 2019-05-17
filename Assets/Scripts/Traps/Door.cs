@@ -24,6 +24,20 @@ public class Door : MonoBehaviour
     */
     public void Toggle()
     {
+        open = !open;
+        if (open)
+        {
+            collider.isTrigger = true;
+            sprite.color = new Color(1, 1, 1, 0);
+        }
+        else
+        {
+            collider.isTrigger = false;
+            sprite.color = new Color(1, 1, 1, 1);
+        }
+        
+        
+        /*
         if (cnt > 0)
         {
             cnt = 0;
@@ -36,13 +50,17 @@ public class Door : MonoBehaviour
             collider.isTrigger = false;
             sprite.color = new Color(1, 1, 1, 1);
         }
+        */
     }
 
     public void Open(bool flag)
     {
+        /*
         cnt += flag?1:-1;
         Debug.Log("Door " + flag);
         open = cnt > 0;
+        */
+        open = flag;
         if (open)
         {
             collider.isTrigger = true;

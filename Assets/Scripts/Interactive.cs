@@ -26,7 +26,7 @@ public class Interactive : MonoBehaviour
     public void Interact()
     {
         OnInteract.Invoke();
-        //Debug.Log("Tap");
+        Debug.Log("Tap");
     }
 
     /*
