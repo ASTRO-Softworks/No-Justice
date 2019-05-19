@@ -237,7 +237,7 @@ public class CharacterController2D : MonoBehaviour
     private void _Logic_Climb(Vector2 direction)
     {
         //Getting target velocity
-        Vector2 targetVelocity = new Vector2(direction.x * m_ClimbingSpeed / 2, direction.y * m_ClimbingSpeed);
+        Vector2 targetVelocity = new Vector2(direction.x * m_ClimbingSpeed, direction.y * m_ClimbingSpeed);
         // And then smoothing it out and applying it to the character
         m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
     }
@@ -258,6 +258,8 @@ public class CharacterController2D : MonoBehaviour
         m_FacingRight = !m_FacingRight;
         // Multiply the player's x local scale by -1.
         //transform.localScale.Scale(new Vector3(-1,0,0));
-        transform.Rotate(0f, 180f, 0f);
+        Vector3 scale = transform.localScale;scale.x *=-1;transform.localScale = scale;
+        //transform.localScale.Scale(new Vector3(-1,1,1));
+        //transform.Rotate(0f, 180f, 0f);
     }
 }

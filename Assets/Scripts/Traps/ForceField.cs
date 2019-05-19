@@ -14,20 +14,22 @@ public class ForceField : MonoBehaviour
     private bool _on = false;
     private SpriteRenderer _spriteRenderer;
 
-    private Color colorOn = new Color(1, 1, 0, .5f);
-    private Color colorOff = new Color(1, 0, 0, .5f);
-    
-    
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        
-        Character.Stats Stats = col.gameObject.GetComponent<Character.Stats>();
+    private Color colorOff = new Color(1, 1, 0, .5f);
+    private Color colorOn = new Color(1, 0, 0, .5f);
 
-        if (Stats)
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (_on)
         {
-            Stats.Damage(damage);
+            Character.Stats Stats = other.gameObject.GetComponent<Character.Stats>();
+
+            if (Stats)
+            {
+                Stats.Damage(damage);
+            }
         }
     }
+
 
     // Start is called before the first frame update
     void Start()

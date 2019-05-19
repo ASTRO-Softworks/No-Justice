@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Character;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,10 +10,12 @@ public class PlayerMovement : AbstractCharacter
     //public CharacterController2D controller;
     //public Animator animator;
 //    public Transform Scope;
+    [SerializeField] private int HP = 1;
+    [SerializeField] private int DEF = 1;
 	public Vector3 SpawnPoint;
-    
-    public float climbSpeed = 20f;
-    public float diveSpeed = 100;
+    private Stats stats;
+    //public float climbSpeed = 20f;
+    //public float diveSpeed = 100;
     Interactive interact_obj;
     bool interact = false;
     float horizontalMove = 0f;
@@ -33,8 +36,12 @@ public class PlayerMovement : AbstractCharacter
     // Use this for initialization
     void Start()
     {
+        
+        stats = gameObject.GetComponent<Stats>();
+        stats.health = HP;
+        stats.defence = DEF;
         SpawnPoint = transform.position;
-        runSpeed = 40f;
+        //runSpeed = 40f;
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
         //new Quaternion()
         //transform.localRotation
@@ -70,10 +77,10 @@ public class PlayerMovement : AbstractCharacter
         else if (Input.GetButtonUp("Crouch"))
         {
             //crouch = false;
-            Crouch();
+            Walk();
             animator.SetBool("IsCrouching", false);
         }
-        else if (Input.GetButtonDown("Interact1"))//Box hide //Fly
+        else if (Input.GetButtonDown("Fly"))//Box hide //Fly
         {
             Fly();
             /*
@@ -89,7 +96,7 @@ public class PlayerMovement : AbstractCharacter
             }
             */
         }
-        else if (Input.GetButtonDown("Interact2"))//"Invis"
+        else if (Input.GetButtonDown("Noclip"))//"NoClip"
         {
             invisible = !invisible;
             if (invisible)
@@ -132,7 +139,7 @@ public class PlayerMovement : AbstractCharacter
         {
             transform.Find("Aimer").gameObject.GetComponent<Scope>().ChangeWeapon(2);
         }
-        else if (Input.GetButtonDown("Interact0"))//Ladder
+        else if (Input.GetButtonDown("Interact"))//Ladder
         {
             if(C.NearLadder(this)) Climb();
             else if(interact)
@@ -143,7 +150,7 @@ public class PlayerMovement : AbstractCharacter
 
             //animator.SetBool("IsCrouching", false);
         }
-
+/*
         if (controller.Condition == CharacterController2D.State.Climb) verticalMove *= climbSpeed;
         else if (controller.Condition == CharacterController2D.State.Swim)
         {
@@ -151,10 +158,11 @@ public class PlayerMovement : AbstractCharacter
             //verticalMove = verticalMove *diveSpeed;
             //Debug.Log("Diving Down! "+verticalMove.ToString()+" "+diveSpeed.ToString());
         }
+*/       
         //Debug.Log("Diving Down! " + verticalMove.ToString() + " " + diveSpeed.ToString());
     }
 
-    public void _OnTriggerEnter2D(Collider2D collider)
+    override public void _OnTriggerEnter2D(Collider2D collider)
     {
         
         if (collider.CompareTag("Interactive"))
@@ -165,7 +173,7 @@ public class PlayerMovement : AbstractCharacter
         }
     }
 
-    public void _OnTriggerExit2D(Collider2D collider)
+    override public void _OnTriggerExit2D(Collider2D collider)
     {
         if (collider.CompareTag("Interactive"))
         {
@@ -187,6 +195,8 @@ public class PlayerMovement : AbstractCharacter
 
     override public void _Die()
     {
+        stats.health = HP;
+        stats.defence = DEF;
         transform.position = SpawnPoint;
     }
 

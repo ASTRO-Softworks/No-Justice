@@ -9,8 +9,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 {
     public CharacterController2D controller;
     public Animator animator;
-    [SerializeField] private bool b_Crouch_strobe = false;
-    [SerializeField] private bool b_Fly_strobe = false;
+    //[SerializeField] private bool b_Crouch_strobe = false;
+    //[SerializeField] private bool b_Fly_strobe = false;
     const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
 
     //Enviroment
@@ -72,18 +72,16 @@ public abstract class AbstractCharacter : MonoBehaviour
         // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
         // This can be done using layers instead but Sample Assets will not overwrite your project settings.
         //Collider2D[] Gcolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3)m_GroundCheck, k_GroundedRadius, m_WhatIsGround);
+        
+        //Checking if under celling
         b_under_ceiling = false;
         Collider2D[] Ccolliders = Physics2D.OverlapCircleAll(transform.position + (Vector3)controller.CeilingCheck, k_GroundedRadius, controller.WhatIsGround);
-        
-        
-        
-        //If he hit celling accelerating downwards(2nd part of jump)
+
         foreach (Collider2D collider in Ccolliders)
         {
             if (collider.gameObject != gameObject && !collider.isTrigger)
             {
                 b_under_ceiling = true;
-                //controller.JumpCycle = controller.JumpDuration / 2;
             }
         }
         
@@ -156,8 +154,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
     protected bool Fly()
     {
+        /*
         if (b_Fly_strobe) b_req_fly = true;
         else b_req_fly = !b_req_fly;
+        */
+        b_req_fly = !b_req_fly;
         //b_req_fly = true;
         //controller.Toggle_Fly();
         //animator.SetBool("IsFlying", true);
@@ -167,9 +168,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     protected bool Crouch()
     {
         //
-
+        /*
         if (b_Crouch_strobe) b_crouch = true;
         else b_crouch = !b_crouch;
+        */
+        b_crouch = true;
        // Debug.Log("AC_Crouch " + b_crouch.ToString());
         //controller.Toggle_Crouch();
         //animator.SetBool("IsCrouching", true);

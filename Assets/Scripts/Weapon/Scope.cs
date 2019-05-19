@@ -81,10 +81,10 @@ public class Scope : MonoBehaviour
     void Update()
     {
         if(aimPoint == Vector3.zero)aimPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);//transform.position + new Vector3(-1,0);//IF zero vector - aim at mouse
-        Vector2 weaponPosition = aimPoint - transform.parent.localPosition;
+        Vector2 weaponPosition = (aimPoint - transform.parent.localPosition);
         weaponPosition.Normalize();
         weaponPosition.Scale(new Vector2(distance, distance));
-        float rotConst = (float)((((transform.rotation.eulerAngles.y / 180 - 1 )*2)+1)*-1);
+        float rotConst = transform.parent.localScale.x>0?1:-1;//(float)((((transform.rotation.eulerAngles.y / 180 - 1 )*2)+1)*-1);
         
         transform.localPosition = new Vector3(rotConst * weaponPosition.x, weaponPosition.y, 0f);
         transform.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(transform.localPosition.y, transform.localPosition.x)* Mathf.Rad2Deg);

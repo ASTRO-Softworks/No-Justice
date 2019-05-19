@@ -30,7 +30,6 @@ namespace Character
             {
                 _ac.Die();
                 Debug.Log("KILL " + gameObject.name);
-                Destroy(gameObject);
             }
             else//Else - just destroy
             {
