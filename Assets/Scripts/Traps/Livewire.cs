@@ -7,7 +7,7 @@ public class Livewire : MonoBehaviour
     public float starttime = 5;
     public float time = 1;
     public float timeattack = 1;
-    private Stats _st;
+    private Character.Stats _st;
     private CharacterController2D _ac;
     private float WS;
     private List<GameObject> Objls = new List<GameObject>();
@@ -45,7 +45,7 @@ public class Livewire : MonoBehaviour
     
     void OnTriggerStay2D(Collider2D Player)
     {
-        if (_st = Player.gameObject.GetComponent<Stats>())
+        if (_st = Player.gameObject.GetComponent<Character.Stats>())
         {
             if (time < timeattack)
             {

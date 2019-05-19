@@ -7,13 +7,13 @@ public class DeadlyEnergyFields : MonoBehaviour
     public float starttime = 5;
     public float time = 1;
     public float timeattack = 1;
-    private Stats _st;
+    private Character.Stats _st;
     // Start is called before the first frame update
     void OnTriggerEnter2D(Collider2D Player)
     {
         if (time < timeattack)
         {
-            if (_st = Player.gameObject.GetComponent<Stats>())
+            if (_st = Player.gameObject.GetComponent<Character.Stats>())
             {
                 _st.Damage(50);
             }
