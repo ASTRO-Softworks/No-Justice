@@ -24,9 +24,22 @@ namespace Character
             Debug.Log("HP " + health);
 
             if (health > 0) return;
-            Debug.Log("KILL " + gameObject.name);
-            Destroy(gameObject);
+
+            AbstractCharacter _ac = gameObject.GetComponent<AbstractCharacter>();
+            if (_ac)//If charecter - kill properly
+            {
+                _ac.Die();
+                Debug.Log("KILL " + gameObject.name);
+                Destroy(gameObject);
+            }
+            else//Else - just destroy
+            {
+                Debug.Log("DESTROY " + gameObject.name);
+                gameObject.SetActive(false);
+                Destroy(gameObject);
+            }
         }
+            
 
         public void SetMemory(Vector2 vector2)
         {

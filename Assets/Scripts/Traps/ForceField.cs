@@ -20,7 +20,7 @@ public class ForceField : MonoBehaviour
     
     void OnCollisionEnter2D(Collision2D col)
     {
-
+        
         Character.Stats Stats = col.gameObject.GetComponent<Character.Stats>();
 
         if (Stats)
@@ -28,11 +28,11 @@ public class ForceField : MonoBehaviour
             Stats.Damage(damage);
         }
     }
-    
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         _time = _on ? timeOn : timeOff;
     }
 
@@ -49,12 +49,13 @@ public class ForceField : MonoBehaviour
             if (_on)
             {
                 _spriteRenderer.color = colorOn;
+                _time = timeOn;
             }
             else
             {
                 _spriteRenderer.color = colorOff;
+                _time = timeOff;
             }
-            
         }
         
     }

@@ -105,7 +105,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     public abstract void _Die();
-
+    
+    
     public void Die()
     {
         _Die();
