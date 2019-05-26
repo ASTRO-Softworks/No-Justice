@@ -15,7 +15,7 @@ using UnityEngine.AI;
 
 public class Scope : MonoBehaviour
 {
-    private Vector3 aimPoint;
+    private Vector3 aimPoint= Vector3.right;
     public float distance = 5f;
 //    weaponPull weaponPull;
     [SerializeField] private List<Weapon> weaponPull;

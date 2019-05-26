@@ -9,7 +9,7 @@ public class PlayerMovement : AbstractCharacter
 
     //public CharacterController2D controller;
     //public Animator animator;
-//    public Transform Scope;
+    public Scope scope;
     [SerializeField] private int HP = 1;
     [SerializeField] private int DEF = 1;
 	public Vector3 SpawnPoint;
@@ -45,7 +45,9 @@ public class PlayerMovement : AbstractCharacter
         //gameObject.GetComponent<WeaponList>().ChangeWeapon(0);
         //new Quaternion()
         //transform.localRotation
-        transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
+        scope = transform.Find("Aimer").gameObject.GetComponent<Scope>();
+        //scope.takeAim(transform.position + Vector3.right);
+        scope.takeAim(transform.position + Vector3.right*(controller.FacingRight?1:-1));
     }
 
     // Update is called once per frame
@@ -58,9 +60,9 @@ public class PlayerMovement : AbstractCharacter
 
         //mouseX = Input.GetAxisRaw("Mouse X");
 
-        //Scope.gameObject.GetComponent<Scope>().takeAim(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        scope.takeAim(transform.position + Vector3.right*(controller.FacingRight?1:-1));//Camera.main.ScreenToWorldPoint(Input.mousePosition));
         //---------------------------------------------------------------Get aimer
-        transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
+        //transform.Find("Aimer").gameObject.GetComponent<Scope>().takeAim(Vector3.zero);
         //animator.SetFloat("Speed", Mathf.Abs(horizontalMove));
 
         if (Input.GetButtonDown("Jump"))
@@ -207,7 +209,7 @@ public class PlayerMovement : AbstractCharacter
         //Debug.Log(dirRight);
         //Debug.Log("NearLadder " + nearladder.ToString() + "\nOnladder " + onladder.ToString());
         //controller.Move(new Vector2(horizontalMove,verticalMove) * Time.fixedDeltaTime, dirRight, crouch, jump, nearladder&&onladder, swimming);
-        controller.Move(new Vector2(horizontalMove, verticalMove), Camera.main.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position);
+        controller.Move(new Vector2(horizontalMove, verticalMove),new Vector2(horizontalMove,verticalMove)); //Camera.main.ScreenToWorldPoint(Input.mousePosition) - gameObject.transform.position);
         //jump = false;
     }
 }

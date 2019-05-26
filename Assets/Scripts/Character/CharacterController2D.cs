@@ -27,6 +27,12 @@ public class CharacterController2D : MonoBehaviour
     const float k_CeilingRadius = .2f;                                             // Radius of the overlap circle to determine if the player can stand up
     private bool m_FacingRight = true;                                             // For determining which way the player is currently facing.
 
+    public bool FacingRight
+    {
+        get { return m_FacingRight; }
+        //set { m_FacingRight = value; }
+    }
+
     //private float m_JumpCycle = 0;
 
     private Vector2 m_Velocity = Vector2.zero;
@@ -258,7 +264,9 @@ public class CharacterController2D : MonoBehaviour
         m_FacingRight = !m_FacingRight;
         // Multiply the player's x local scale by -1.
         //transform.localScale.Scale(new Vector3(-1,0,0));
-        Vector3 scale = transform.localScale;scale.x *=-1;transform.localScale = scale;
+        gameObject.GetComponent<SpriteRenderer>().flipX = !m_FacingRight;
+        //gameObject.transform.Find("Aimer").localScale = new Vector3(1,-1,1);
+        //Vector3 scale = transform.localScale;scale.x *=-1;transform.localScale = scale;
         //transform.localScale.Scale(new Vector3(-1,1,1));
         //transform.Rotate(0f, 180f, 0f);
     }
